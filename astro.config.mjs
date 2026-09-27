@@ -1,7 +1,7 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
 import tailwindcss from '@tailwindcss/vite';
-import netlify from '@astrojs/netlify';
+import node from '@astrojs/node';
 
 /*
  * Astro 6: output 'hybrid' fue eliminado. El modo 'static' (default)
@@ -9,13 +9,13 @@ import netlify from '@astrojs/netlify';
  * las rutas que declaran `export const prerender = false` (como la API
  * de contacto), que se ejecutan en el servidor.
  *
- * PRODUCCIÓN: para el build final añadir un adapter según la plataforma:
+ * PRODUCCIÓN: adapter Node standalone → Docker en VPS (ver deploy/README.md).
  *   Vercel  → npm i @astrojs/vercel   → import vercel  from '@astrojs/vercel'
  *   Netlify → npm i @astrojs/netlify  → import netlify from '@astrojs/netlify'
  *   Node.js → npm i @astrojs/node     → import node    from '@astrojs/node'
  */
 export default defineConfig({
-  adapter: netlify(),
+  adapter: node({ mode: 'standalone' }),
   devToolbar: { enabled: false },
 
   vite: {
