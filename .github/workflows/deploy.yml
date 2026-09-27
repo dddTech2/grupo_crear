@@ -10,7 +10,7 @@ concurrency:
   cancel-in-progress: false
 
 env:
-  IMAGE: ghcr.io/${{ github.repository_owner }}/grupo_crear
+  IMAGE: ghcr.io/dddtech2/grupo_crear  # GHCR exige minúsculas
   CONTAINER: grupocrear
   # Puerto local del VPS (solo 127.0.0.1). Cámbialo con la variable de repo APP_PORT si choca con otro sitio.
   APP_PORT: ${{ vars.APP_PORT || '4321' }}
