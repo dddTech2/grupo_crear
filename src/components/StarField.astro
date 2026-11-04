@@ -1,0 +1,179 @@
+---
+/*
+  StarField — cielo estrellado del hero (canvas 2D, sin WebGL).
+
+  Modelo "starfield" clásico: cada estrella tiene (x, y) en [-1, 1] y una
+  profundidad z en (0, 1]. Se proyecta como centro + (x / z) · escala, así que
+  al reducir z la estrella se acerca y se abre hacia los bordes. Con velocidad
+  base casi nula el cielo parece quieto y titilante; al subir `warp` la cámara
+  "despega" y las estrellas se estiran en estelas radiales, en la misma
+  dirección en que se dispersan las tarjetas del collage.
+
+  API para GSAP (index.astro): window.__stars = { alpha, warp, drift }
+    alpha — opacidad global 0→1 (el intro la enciende)
+    warp  — 0 = cielo quieto, 1 = salto a velocidad luz
+    drift — desplazamiento vertical del centro (parallax), en fracción de alto
+
+  Coste por frame: ~290 estrellas agrupadas en 9 Path2D (3 tamaños × 3 colores)
+  → 9 llamadas a stroke(). Corre en gsap.ticker (el mismo rAF que Lenis) y se
+  salta el dibujo cuando el hero no está en pantalla.
+*/
+---
+
+<canvas id="starfield" aria-hidden="true"></canvas>
+
+<style>
+  #starfield {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+    z-index: 0;
+    pointer-events: none;
+  }
+</style>
+
+<script>
+  import { gsap } from '../utils/gsap-config';
+
+  type Star = { x: number; y: number; z: number; c: number };
+  type StarsState = { alpha: number; warp: number; drift: number };
+
+  const announceReady = () => window.dispatchEvent(new CustomEvent('scene:ready'));
+
+  const canvas = document.getElementById('starfield') as HTMLCanvasElement | null;
+  const ctx    = canvas?.getContext('2d') ?? null;
+
+  if (!canvas || !ctx) {
+    announceReady(); // sin canvas el preloader no debe quedarse esperando
+  } else {
+    const prefersRM = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const isCoarse  = window.innerWidth < 768 || window.matchMedia('(pointer: coarse)').matches;
+
+    const DPR       = Math.min(window.devicePixelRatio || 1, isCoarse ? 1 : 1.5);
+    const COUNT     = isCoarse ? 140 : 290;
+    const FRAME_MS  = isCoarse ? 30 : 0;       // 30 fps en táctil, libre en escritorio
+    const BASE_SPD  = 0.018;                   // z/segundo con el cielo "quieto"
+    const WARP_SPD  = 1.25;                    // z/segundo extra con warp = 1
+
+    // Blanco, blanco azulado y naranja de marca (≈8 % de las estrellas)
+    const COLORS = ['#FFFFFF', '#BFD4FF', '#FF9F70'];
+    const pickColor = () => {
+      const r = Math.random();
+      return r < 0.08 ? 2 : r < 0.45 ? 1 : 0;
+    };
+
+    const state: StarsState = { alpha: prefersRM ? 0.7 : 0, warp: 0, drift: 0 };
+    (window as any).__stars = state;
+
+    const spawn = (s: Star, z = 1) => {
+      s.x = Math.random() * 2 - 1;
+      s.y = Math.random() * 2 - 1;
+      s.z = z;
+      return s;
+    };
+    const stars: Star[] = Array.from({ length: COUNT }, () =>
+      spawn({ x: 0, y: 0, z: 1, c: pickColor() }, 0.05 + Math.random() * 0.95),
+    );
+
+    let W = 0, H = 0;
+    const resize = () => {
+      const r = canvas.getBoundingClientRect();
+      W = Math.max(1, Math.round(r.width  * DPR));
+      H = Math.max(1, Math.round(r.height * DPR));
+      if (canvas.width !== W || canvas.height !== H) {
+        canvas.width  = W;
+        canvas.height = H;
+      }
+      if (prefersRM) draw(0, 0);
+    };
+
+    // Tamaño por profundidad: lejos (z>.66), medio, cerca (z<.33)
+    const WIDTHS = [1.1, 1.7, 2.6];
+    const ALPHAS = [0.55, 0.85, 1];
+    const sizeIdx = (z: number) => (z > 0.66 ? 0 : z > 0.33 ? 1 : 2);
+
+    let lastAlpha = -1;
+
+    function draw(dt: number, t: number) {
+      ctx!.clearRect(0, 0, W, H);
+      if (state.alpha <= 0.001) return;
+
+      const lenisVel = Math.abs((window as any).__lenis?.velocity ?? 0);
+      const speed    = prefersRM ? 0 : BASE_SPD + state.warp * WARP_SPD + Math.min(lenisVel * 0.004, 0.25);
+      // La estela es la distancia recorrida en ~0.12 s: con el cielo quieto queda en un punto
+      const trail    = prefersRM ? 0 : (state.warp * WARP_SPD + Math.min(lenisVel * 0.004, 0.25)) * 0.12;
+
+      const cx    = W / 2;
+      const cy    = H / 2 - state.drift * H;
+      const scale = Math.max(W, H) * 0.5;
+
+      const paths = Array.from({ length: 9 }, () => new Path2D());
+
+      for (const s of stars) {
+        s.z -= speed * dt;
+        if (s.z <= 0.02) spawn(s);
+
+        const px = cx + (s.x / s.z) * scale;
+        const py = cy + (s.y / s.z) * scale;
+        if (px < -40 || px > W + 40 || py < -40 || py > H + 40) {
+          spawn(s);
+          continue;
+        }
+
+        const tz = Math.min(s.z + trail, 1);
+        let qx = cx + (s.x / tz) * scale;
+        let qy = cy + (s.y / tz) * scale;
+        // Longitud mínima: un segmento casi nulo con lineCap round dibuja un punto
+        if (Math.abs(px - qx) + Math.abs(py - qy) < 0.2) { qx = px + 0.2; qy = py; }
+
+        const p = paths[sizeIdx(s.z) * 3 + s.c];
+        p.moveTo(qx, qy);
+        p.lineTo(px, py);
+      }
+
+      ctx!.lineCap = 'round';
+      for (let i = 0; i < 9; i++) {
+        const si = Math.floor(i / 3);
+        // Titileo por grupo: cada uno con su fase, para que no laten a la vez
+        const tw = prefersRM ? 1 : 0.78 + 0.22 * Math.sin(t * (1.3 + i * 0.37) + i * 2.1);
+        ctx!.globalAlpha = state.alpha * ALPHAS[si] * tw;
+        ctx!.strokeStyle = COLORS[i % 3];
+        ctx!.lineWidth   = WIDTHS[si] * DPR;
+        ctx!.stroke(paths[i]);
+      }
+      ctx!.globalAlpha = 1;
+    }
+
+    new ResizeObserver(resize).observe(canvas);
+    resize();
+
+    if (!prefersRM) {
+      // Solo dibuja con el hero en pantalla (mientras está pinneado lo está)
+      let visible = true;
+      const hero = canvas.closest('section') ?? canvas.parentElement;
+      if (hero && 'IntersectionObserver' in window) {
+        new IntersectionObserver((e) => { visible = e[0].isIntersecting; }).observe(hero);
+      }
+
+      let lastT = 0;
+      gsap.ticker.add((time: number) => {
+        if (!visible) return;
+        const ms = time * 1000;
+        // Cielo quieto (sin warp ni scroll): el titileo no necesita 60 fps → 30 fps
+        const calm = state.warp < 0.05 && Math.abs((window as any).__lenis?.velocity ?? 0) < 0.5;
+        const minMs = calm ? 30 : FRAME_MS;
+        if (minMs && ms - lastT < minMs) return;
+        const dt = lastT ? Math.min((ms - lastT) / 1000, 0.05) : 0;
+        lastT = ms;
+        // Con alpha 0 basta un clear: evita trabajo mientras el preloader tapa la escena
+        if (state.alpha <= 0.001 && lastAlpha <= 0.001) return;
+        lastAlpha = state.alpha;
+        draw(dt, time);
+      });
+    }
+
+    announceReady();
+  }
+</script>

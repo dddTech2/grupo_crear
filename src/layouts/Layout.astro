@@ -1,6 +1,7 @@
 ---
 import Header from '../components/Header.astro';
 import ChatWidget from '../components/ChatWidget.astro';
+import { waBase } from '../data/contacto';
 import '../styles/global.css';
 import { readFileSync } from 'node:fs';
 import { resolve }      from 'node:path';
@@ -43,26 +44,27 @@ try {
   <meta name="referrer" content="strict-origin-when-cross-origin" />
 
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-  <link rel="icon" href="/favicon.ico" />
+  <link rel="icon" href="/favicon.ico" sizes="48x48" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Sofia+Sans:ital,wght@0,1..1000;1,1..1000&family=Sofia+Sans+Condensed:wght@1..1000&display=swap" rel="stylesheet" />
 
   <!-- Coordinación de carga anticipada -->
   <script is:inline>
-    window.__webglReady = false;
+    window.__sceneReady = false;
     window.__windowLoaded = false;
     
     // Temporizador de respaldo para evitar bloqueos
     window.__preloaderTimeout = setTimeout(() => {
       console.warn("Preloader timeout reached. Forcing load state.");
-      window.__webglReady = true;
+      window.__sceneReady = true;
       window.__windowLoaded = true;
       if (window.__checkAllLoaded) window.__checkAllLoaded();
     }, 4500);
 
-    window.addEventListener('webgl:ready', () => {
-      window.__webglReady = true;
+    window.addEventListener('scene:ready', () => {
+      window.__sceneReady = true;
       if (window.__checkAllLoaded) window.__checkAllLoaded();
     }, { once: true });
 
@@ -110,16 +112,18 @@ try {
     .spark{position:fixed;top:0;left:0;z-index:9998;pointer-events:none;border-radius:50%;background:var(--n);will-change:transform,opacity}
 
     /* grano */
-    .grain{position:fixed;inset:0;z-index:9999;pointer-events:none;opacity:.04;mix-blend-mode:overlay}
-    .grain svg{width:100%;height:100%}
+    /* Tile de ruido estático (7 KB): antes era un feTurbulence en vivo con
+       mix-blend-mode sobre toda la página, que obligaba a recomponer cada frame */
+    .grain{position:fixed;inset:0;z-index:9999;pointer-events:none;opacity:.045;background:url(/grain.webp) repeat;background-size:128px}
 
     /* ── TRAYECTORIA DE VUELO ── */
     #flight{position:fixed;top:0;right:clamp(14px,2.4vw,34px);width:46px;height:100vh;z-index:120;pointer-events:none;display:flex;justify-content:center}
     #flight .rail{position:absolute;top:14vh;bottom:10vh;width:2px;left:50%;transform:translateX(-50%);background:linear-gradient(var(--w12),var(--w06));border-radius:2px;overflow:hidden}
-    #flight .rail .fill{position:absolute;top:0;left:0;width:100%;height:0;background:linear-gradient(var(--n),rgba(232,78,27,.2));border-radius:2px;transition:height .1s linear}
-    #flight .ship{position:absolute;left:50%;top:14vh;width:34px;height:34px;transform:translate(-50%,-50%);will-change:top}
+    #flight .rail .fill{position:absolute;inset:0;background:linear-gradient(var(--n),rgba(232,78,27,.2));border-radius:2px;transform:scaleY(0);transform-origin:top}
+    #flight .ship{position:absolute;left:50%;top:14vh;width:34px;height:34px;margin:-17px 0 0 -17px;will-change:transform}
     #flight .ship svg{width:100%;height:100%;filter:drop-shadow(0 3px 8px rgba(232,78,27,.5))}
-    #flight .lbl{position:absolute;left:50%;bottom:4vh;transform:translateX(-50%);writing-mode:vertical-rl;font-family:'Sofia Sans Condensed';font-size:11px;letter-spacing:.25em;text-transform:uppercase;color:var(--w40)}
+    /* La etiqueta del capítulo viaja con la nave (abajo quedaba tapada por chat/WhatsApp) */
+    #flight .lbl{position:absolute;left:50%;top:14vh;margin:26px 0 0 -.55em;white-space:nowrap;will-change:transform;writing-mode:vertical-rl;font-family:'Sofia Sans Condensed';font-size:11px;letter-spacing:.25em;text-transform:uppercase;color:var(--w40)}
     @media(max-width:980px){#flight{display:none}}
 
     /* NAV */
@@ -200,9 +204,9 @@ try {
     }
 
     /* MARQUEE */
-    .marquee{border-top:1px solid var(--w06);border-bottom:1px solid var(--w06);padding:26px 0;overflow:hidden;background:var(--ink)}
+    .marquee{border-top:1px solid var(--w06);border-bottom:1px solid var(--w06);padding:26px 0;overflow:hidden;background:var(--bg)}
     .mq-track{display:flex;gap:64px;width:max-content;animation:scroll 28s linear infinite;align-items:center}
-    .marquee:hover .mq-track{animation-play-state:paused}
+    .marquee:hover .mq-track,.marquee.off .mq-track{animation-play-state:paused}
     .mq-track span{font-family:'Sofia Sans Condensed';font-size:30px;font-weight:700;color:rgba(255,255,255,.22);letter-spacing:-.02em;text-transform:uppercase;white-space:nowrap;transition:color .3s}
     .mq-track span:hover{color:var(--n)}
     .mq-track .sep{width:7px;height:7px;border-radius:50%;background:var(--n);flex-shrink:0}
@@ -241,6 +245,48 @@ try {
     }
     .lead{font-family:'Sofia Sans Condensed';font-weight:900;font-size:clamp(38px,6.5vw,86px);line-height:.92;letter-spacing:-.035em;text-transform:uppercase}
     .lead em{font-style:normal;color:var(--n)}
+    /* Líneas con máscara (story.ts): el padding evita recortar tildes en mayúscula (DÉCADA) */
+    .lead .ln{display:block;overflow:hidden;padding-top:.12em;margin-top:-.12em}
+    .lead .ln>span{display:block}
+
+    /* Fondo sólido único: las secciones se separan con hairlines, no con color */
+    #nos,#port,#seo,#cto{border-top:1px solid var(--w06)}
+
+    /* ── HISTORIA "Misión de despegue" (story.ts) ── */
+    section[data-chapter]{position:relative;overflow-x:clip}
+    section[data-chapter]>:not(.ch-word):not(.cto-huge){position:relative;z-index:1}
+    /* Palabra gigante del capítulo: contorno tenue que cruza la sección */
+    .ch-word{position:absolute;top:clamp(16px,3vw,48px);left:clamp(20px,5vw,64px);z-index:0;font-family:'Sofia Sans Condensed';font-weight:900;font-size:clamp(96px,19vw,300px);line-height:.8;letter-spacing:-.04em;text-transform:uppercase;white-space:nowrap;color:transparent;-webkit-text-stroke:1px rgba(255,255,255,.075);pointer-events:none;user-select:none}
+    /* Órbita: planeta + cohete del logo entre el titular y el texto de Servicios */
+    #serv .wrap{position:relative}
+    .orbit{position:absolute;top:-10px;left:34%;width:min(30vw,400px);pointer-events:none}
+    .orbit svg{width:100%;height:auto;display:block;overflow:visible}
+    @media(max-width:979px){.orbit{display:none}}
+    /* Aterrizaje: el cohete se posa a la derecha del titular */
+    .cto-l{position:relative}
+    .lander{position:absolute;top:clamp(40px,6vw,90px);right:clamp(0px,4vw,60px);width:clamp(54px,6vw,84px);pointer-events:none}
+    .lander svg{width:100%;height:auto;display:block;filter:drop-shadow(0 6px 18px rgba(232,78,27,.45))}
+    .lander-dust{position:absolute;left:-40%;right:-40%;bottom:6%;height:2px;border-radius:2px;background:radial-gradient(closest-side,rgba(255,159,112,.9),transparent);opacity:0;transform-origin:center}
+    @media(max-width:980px){.lander{top:0;right:0;width:52px}}
+    /* Planetas en escritorio: la cuadrícula se vuelve una pista horizontal pinneada */
+    #port.port-h{height:100vh;display:flex;flex-direction:column;padding-top:clamp(92px,12vh,130px);padding-bottom:clamp(28px,5vh,56px)}
+    #port.port-h .wrap{width:100%;flex:1;min-height:0;display:flex;flex-direction:column}
+    #port.port-h .serv-head{margin-bottom:clamp(18px,3vh,36px)}
+    #port.port-h .lead{font-size:clamp(38px,5vw,68px)}
+    #port.port-h .port-grid{flex:1;min-height:0;display:flex;gap:18px;margin-top:0}
+    #port.port-h .proj{flex:none;height:100%;min-height:0;width:clamp(300px,30vw,460px)}
+    #port.port-h .proj.a{width:clamp(460px,46vw,720px)}
+    #port.port-h .proj-media{inset:0 -7%}
+
+    /* HUD de misión: capítulo actual + altitud (aparece desde el Despegue) */
+    #mission-hud{position:fixed;left:clamp(14px,2.4vw,34px);bottom:clamp(14px,2.6vh,24px);z-index:250;display:flex;align-items:center;gap:12px;padding:9px 16px 9px 12px;border-radius:100px;background:rgba(0,16,42,.88);border:1px solid var(--w12);font-family:'Sofia Sans Condensed',sans-serif;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--w60);pointer-events:none;opacity:0;transform:translateY(10px);transition:opacity .5s var(--ease),transform .5s var(--ease)}
+    #mission-hud.on{opacity:1;transform:none}
+    #mission-hud.on.off{opacity:0;transform:translateY(10px)}
+    #mission-hud .hud-dot{width:6px;height:6px;border-radius:50%;background:var(--n);animation:idx-pulse 2.8s ease-in-out infinite}
+    #mission-hud b{color:#fff;font-weight:700}
+    #mission-hud .hud-name{color:#fff;min-width:8.5em}
+    #mission-hud .hud-sep{width:1px;height:12px;background:var(--w12)}
+    @media(max-width:520px){#mission-hud .hud-alt,#mission-hud .hud-sep{display:none}}
 
     /* SERVICIOS */
     #serv{background:var(--bg)}
@@ -263,7 +309,7 @@ try {
     .srow:hover .sicon svg{stroke:#fff;transform:rotate(-45deg)}
 
     /* NOSOTROS */
-    #nos{background:var(--ink);position:relative;overflow:hidden}
+    #nos{background:var(--bg);position:relative;overflow:hidden}
     .nos-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:clamp(40px,6vw,90px);align-items:center}
     .nos-fig{position:relative}
     .nos-frame{aspect-ratio:3/4;border-radius:6px;overflow:hidden;position:relative;background:linear-gradient(150deg,var(--bg2),var(--ink))}
@@ -276,7 +322,7 @@ try {
     .nos-txt p{color:var(--w60);font-size:clamp(16px,1.5vw,18px);line-height:1.7;margin-top:24px}
     .nos-txt p strong{color:#fff;font-weight:600}
     .nos-stats{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--w06);border:1px solid var(--w06);margin-top:40px;border-radius:6px;overflow:hidden}
-    .nos-stat{background:var(--ink);padding:24px 22px}
+    .nos-stat{background:var(--bg);padding:24px 22px}
     .nos-stat b{font-family:'Sofia Sans Condensed';font-size:40px;font-weight:900;line-height:.85;letter-spacing:-.03em}
     .nos-stat span{display:block;margin-top:8px;font-size:13px;color:var(--w60)}
 
@@ -307,14 +353,15 @@ try {
     .proj .arrow svg{width:16px;height:16px;stroke:#fff;fill:none;stroke-width:1.6}
 
     /* PORTAFOLIO con medias */
-    .proj-media{position:absolute;inset:0}
+    /* 7 % de margen arriba/abajo para el parallax interno de story.ts */
+    .proj-media{position:absolute;inset:-7% 0}
     .proj-media img,.proj-media video{width:100%;height:100%;object-fit:cover;display:block;transition:transform .9s var(--ease)}
     .proj:hover .proj-media img,.proj:hover .proj-media video{transform:scale(1.06)}
 
     /* SEO */
-    #seo{background:var(--ink)}
+    #seo{background:var(--bg)}
     .seo-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--w06);border:1px solid var(--w06);border-radius:8px;overflow:hidden;margin-top:clamp(40px,6vw,64px)}
-    .seo-c{background:var(--ink);padding:clamp(28px,3vw,40px) clamp(22px,2.5vw,30px);transition:background .4s}
+    .seo-c{background:var(--bg);padding:clamp(28px,3vw,40px) clamp(22px,2.5vw,30px);transition:background .4s}
     .seo-c:hover{background:var(--bg2)}
     .seo-ic{width:46px;height:46px;display:flex;align-items:center;justify-content:center;margin-bottom:22px}
     .seo-ic svg{width:30px;height:30px;stroke:var(--n);fill:none;stroke-width:1.3;stroke-linecap:round;stroke-linejoin:round}
@@ -438,14 +485,7 @@ try {
   )}
 
   <!-- Grano analógico -->
-  <div class="grain" aria-hidden="true">
-    <svg xmlns="http://www.w3.org/2000/svg">
-      <filter id="nz">
-        <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="3"/>
-      </filter>
-      <rect width="100%" height="100%" filter="url(#nz)"/>
-    </svg>
-  </div>
+  <div class="grain" aria-hidden="true"></div>
 
   <!-- Cursor cohete -->
   <slot name="cursor" />
@@ -465,6 +505,15 @@ try {
     <div class="lbl">Altitude</div>
   </div>
 
+  <!-- HUD de misión (decorativo: el contenido real son las secciones) -->
+  <div id="mission-hud" aria-hidden="true">
+    <span class="hud-dot"></span>
+    <span class="hud-num"><b id="hudIdx">01</b> / <span id="hudTot">01</span></span>
+    <span class="hud-name" id="hudName">Ignición</span>
+    <span class="hud-sep"></span>
+    <span class="hud-alt">Alt <b id="hudAlt">0</b> km</span>
+  </div>
+
   <!-- NAV -->
   <Header />
 
@@ -476,7 +525,7 @@ try {
   </main>
 
   <!-- WhatsApp flotante -->
-  <a href="https://wa.me/573000000000" class="wa" target="_blank" rel="noopener noreferrer" aria-label="Contactar por WhatsApp">
+  <a href={waBase} class="wa" target="_blank" rel="noopener noreferrer" aria-label="Contactar por WhatsApp">
     <svg viewBox="0 0 24 24" aria-hidden="true">
       <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
     </svg>
@@ -492,7 +541,7 @@ try {
     // lagSmoothing(0) prevents GSAP from compensating for tab-blur lag, which
     // would fight Lenis and cause jitter on focus restore.
     import Lenis from 'lenis';
-    import { gsap } from '../utils/gsap-config';
+    import { gsap, ScrollTrigger } from '../utils/gsap-config';
 
     const lenis = new Lenis({
       duration:    1.2,
@@ -501,6 +550,7 @@ try {
       smoothWheel: true,
     });
 
+    lenis.on('scroll', ScrollTrigger.update);
     gsap.ticker.add((time: number) => { lenis.raf(time * 1000); });
     gsap.ticker.lagSmoothing(0);
 
@@ -535,12 +585,138 @@ try {
       { threshold: 0.08, rootMargin: '0px 0px -48px 0px' },
     );
     revealEls.forEach((el) => io.observe(el));
+
+    // ── Rail "Altitude": hilo conductor de la historia ──────────────────────
+    // El cohete baja por el rail con el progreso de la página y la etiqueta
+    // muestra el capítulo actual (atributo data-chapter de cada sección).
+    // Solo transform: scaleY para el relleno, y para la nave.
+    const railFill = document.getElementById('railFill');
+    const ship     = document.getElementById('ship');
+    const flame    = document.getElementById('shipFlame');
+    const lbl      = document.querySelector<HTMLElement>('#flight .lbl');
+    const flightRM = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // Capítulos en orden de página: Ignición (hero, sin atributo) + cada [data-chapter]
+    const chapterSecs = [...document.querySelectorAll<HTMLElement>('[data-chapter]')];
+    const CHAPTERS = chapterSecs.length ? ['Ignición', ...chapterSecs.map((s) => s.dataset.chapter!)] : [];
+    const hud     = document.getElementById('mission-hud');
+    const hudIdx  = document.getElementById('hudIdx');
+    const hudName = document.getElementById('hudName');
+    const hudAlt  = document.getElementById('hudAlt');
+    const pad2 = (n: number) => String(n).padStart(2, '0');
+    const hudTot = document.getElementById('hudTot');
+    if (hudTot) hudTot.textContent = pad2(CHAPTERS.length);
+
+    let chapter = '';
+    let lblH = 0; // alto cacheado: leer offsetHeight en cada frame de scroll forzaría layout
+    const setChapter = (name: string) => {
+      if (name === chapter) return;
+      chapter = name;
+      const i = CHAPTERS.indexOf(name);
+      if (hud && i >= 0) {
+        hudIdx!.textContent  = pad2(i + 1);
+        hudName!.textContent = name;
+        // En la Ignición el tagline ocupa la esquina inferior izquierda
+        hud.classList.toggle('on', i > 0);
+        if (!flightRM) gsap.fromTo(hudName, { opacity: 0, y: 6 }, { opacity: 1, y: 0, duration: 0.45, ease: 'expo.out' });
+      }
+      if (!lbl) return;
+      lbl.textContent = name;
+      lblH = lbl.offsetHeight;
+      // Solo opacity: el transform de la etiqueta lo maneja el rail (sigue a la nave)
+      if (!flightRM) gsap.fromTo(lbl, { opacity: 0 }, { opacity: 1, duration: 0.5, ease: 'expo.out' });
+    };
+    (window as any).__setChapter = setChapter;
+
+    if (railFill && ship && getComputedStyle(document.getElementById('flight')!).display !== 'none') {
+      const rail     = railFill.parentElement!;
+      const setFill  = gsap.quickSetter(railFill, 'scaleY');
+      const setShipY = gsap.quickSetter(ship, 'y', 'px');
+      const setLblY  = lbl ? gsap.quickSetter(lbl, 'y', 'px') : () => {};
+      let travel = rail.offsetHeight;
+      // La etiqueta mide ~100 px en vertical: se frena antes del final del rail
+      const update = (p: number) => {
+        setFill(p);
+        setShipY(p * travel);
+        setLblY(Math.min(p * travel, travel - lblH - 30));
+      };
+
+      ScrollTrigger.create({
+        start: 0,
+        end: 'max',
+        onUpdate: (self) => update(self.progress),
+        onRefresh: (self) => { travel = rail.offsetHeight; lblH = lbl?.offsetHeight ?? 0; update(self.progress); },
+      });
+
+      // La llama crece con la velocidad (retrocohete frenando el descenso)
+      if (flame && !flightRM) {
+        gsap.set(flame, { transformOrigin: '50% 0%' });
+        const setFlame = gsap.quickSetter(flame, 'scaleY');
+        let last = 1;
+        gsap.ticker.add(() => {
+          const v = 1 + Math.min(Math.abs(lenis.velocity) / 30, 1) * 1.4;
+          if (Math.abs(v - last) < 0.02) return;
+          last += (v - last) * 0.2;
+          setFlame(last);
+        });
+      }
+    }
+
+    if (hud && CHAPTERS.length) {
+      let lastAlt = -1;
+      ScrollTrigger.create({
+        start: 0,
+        end: 'max',
+        onUpdate: (self) => {
+          const alt = Math.round(Math.sin(Math.PI * self.progress) * 420) * 10;
+          if (alt === lastAlt) return;
+          lastAlt = alt;
+          hudAlt!.textContent = alt.toLocaleString('es-CO');
+        },
+      });
+    }
+
+    // Triggers de capítulo. Una sección pinneada (Planetas en escritorio) mide mal
+    // su propio alto: el recorrido extra vive en su .pin-spacer, así que se usa ese
+    // envoltorio. Por eso en la home se crean DESPUÉS de los pins (evento story:ready).
+    const createChapterTriggers = () => {
+      chapterSecs.forEach((sec) => {
+        const box = sec.parentElement?.classList.contains('pin-spacer') ? sec.parentElement : sec;
+        ScrollTrigger.create({
+          trigger: box,
+          start: 'top center',
+          end: 'bottom center',
+          onToggle: (self) => { if (self.isActive) setChapter(sec.dataset.chapter!); },
+        });
+      });
+    };
+    if (document.getElementById('hero-visual')) {
+      window.addEventListener('story:ready', createChapterTriggers, { once: true });
+    } else {
+      createChapterTriggers();
+    }
+
+    // El HUD se retira al llegar al footer para no tapar su texto
+    const footer = document.querySelector('footer');
+    if (hud && footer) {
+      ScrollTrigger.create({
+        trigger: footer,
+        start: 'top 92%',
+        onToggle: (self) => hud.classList.toggle('off', self.isActive),
+      });
+    }
+
+    // Marquee: no animar mientras está fuera de pantalla
+    const marquee = document.querySelector('.marquee');
+    if (marquee) {
+      new IntersectionObserver(([e]) => marquee.classList.toggle('off', !e.isIntersecting)).observe(marquee);
+    }
   </script>
 
   <!-- Script de validación final para ocultar preloader -->
   <script is:inline>
     window.__checkAllLoaded = function() {
-      if (window.__windowLoaded && window.__webglReady) {
+      if (window.__windowLoaded && window.__sceneReady) {
         if (window.__preloaderTimeout) clearTimeout(window.__preloaderTimeout);
         window.dispatchEvent(new CustomEvent('load:complete'));
         if (!document.getElementById('preloader') && !document.getElementById('intro-mask')) {

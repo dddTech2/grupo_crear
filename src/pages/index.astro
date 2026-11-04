@@ -7,6 +7,8 @@ import MeteorScroll from '../components/MeteorScroll.astro';
 import LogoHeroMask from '../components/LogoHeroMask.astro';
 import Footer from '../components/Footer.astro';
 import BrandCarousel from '../components/BrandCarousel.astro';
+import StarField from '../components/StarField.astro';
+import { contacto, waBase, telLink, mailtoLink } from '../data/contacto';
 ---
 
 <Layout
@@ -22,6 +24,9 @@ import BrandCarousel from '../components/BrandCarousel.astro';
        FOLD 1 — VISUAL: intro animation, meteor, collage (100vh, no text)
   ═══════════════════════════════════════════════ -->
   <section id="hero-visual" class="relative h-screen w-full overflow-hidden bg-[#001433]">
+    <!-- Cielo estrellado: capa más profunda, se ve a través de la ventana del logo -->
+    <StarField />
+
     <div class="hero-glow pointer-events-none absolute w-[70vw] h-[70vw] max-w-[900px] max-h-[900px] rounded-full top-[-25%] right-[-15%] opacity-100" id="glow-bg" style="background: radial-gradient(circle, rgba(232,78,27,0.22), transparent 60%); filter: blur(40px);"></div>
 
     <!-- El Meteoro central (visible al inicio detrás de la máscara) -->
@@ -58,7 +63,7 @@ import BrandCarousel from '../components/BrandCarousel.astro';
       <div class="card-parallax absolute bottom-[22%] right-[16%] w-36 rounded-xl overflow-hidden shadow-2xl opacity-100"
            data-speed="2.2" data-x="500" data-y="300" data-rx="25" data-ry="25" data-sk="8">
         <video autoplay loop muted playsinline class="w-full h-auto" aria-hidden="true">
-          <source data-src="/VistaMacCinematica_3.webm" type="video/webm" />
+          <source data-src="/VistaMacCinematica_3.mp4" type="video/mp4" />
         </video>
       </div>
 
@@ -66,7 +71,8 @@ import BrandCarousel from '../components/BrandCarousel.astro';
       <div class="card-parallax absolute bottom-[16%] left-[14%] w-80 rounded-xl overflow-hidden shadow-2xl opacity-100"
            data-speed="-1" data-x="-500" data-y="400" data-rx="30" data-ry="-25" data-sk="-8">
         <video autoplay loop muted playsinline class="w-full h-auto" aria-hidden="true">
-          <source data-src="/Publicidad_pantallaedificio_cocacola.webm" type="video/webm" />
+          <!-- 480p: esta tarjeta mide 320 px (w-80); 854 px de ancho cubre retina -->
+          <source data-src="/Publicidad_pantallaedificio_cocacola_480.mp4" type="video/mp4" />
         </video>
       </div>
 
@@ -74,7 +80,7 @@ import BrandCarousel from '../components/BrandCarousel.astro';
       <div class="card-parallax absolute top-[22%] left-[6%] w-64 rounded-xl overflow-hidden shadow-2xl opacity-100"
            data-speed="1.2" data-x="-450" data-y="-300" data-rx="-25" data-ry="-30" data-sk="8">
         <video autoplay loop muted playsinline class="w-full h-auto" aria-hidden="true">
-          <source data-src="/Impresion-a-gran-formato_naranja_3.webm" type="video/webm" />
+          <source data-src="/Impresion-a-gran-formato_naranja_3.mp4" type="video/mp4" />
         </video>
       </div>
 
@@ -135,7 +141,7 @@ import BrandCarousel from '../components/BrandCarousel.astro';
   <!-- ═══════════════════════════════════════════════
        FOLD 2 — CONTENT: text reveal on scroll
   ═══════════════════════════════════════════════ -->
-  <section id="hero-content" class="relative min-h-screen w-full flex flex-col justify-center bg-[#001433]" style="padding: clamp(80px,11vw,150px) clamp(20px,5vw,64px);" aria-label="Hero principal">
+  <section id="hero-content" data-chapter="Despegue" class="relative min-h-screen w-full flex flex-col justify-center bg-[#001433]" style="padding: clamp(80px,11vw,150px) clamp(20px,5vw,64px);" aria-label="Hero principal">
     <div style="max-width:1100px;">
 
       <div class="kick" id="hero-kick" style="opacity:0;transform:translateY(16px);">
@@ -190,18 +196,35 @@ import BrandCarousel from '../components/BrandCarousel.astro';
   <!-- ═══════════════════════════════════════════════
        SERVICIOS
   ═══════════════════════════════════════════════ -->
-  <section id="serv" aria-labelledby="serv-title">
+  <section id="serv" data-chapter="Órbita" aria-labelledby="serv-title">
     <div class="wrap">
+      <!-- Órbita: el cohete del logo da la vuelta al planeta con el scroll (story.ts) -->
+      <div class="orbit" aria-hidden="true">
+        <svg viewBox="0 0 400 220" fill="none">
+          <defs>
+            <radialGradient id="planet-g" cx="35%" cy="30%" r="75%">
+              <stop offset="0" stop-color="#FF9F70"/>
+              <stop offset=".55" stop-color="#E84E1B"/>
+              <stop offset="1" stop-color="#5a1a06"/>
+            </radialGradient>
+          </defs>
+          <path id="orbit-track" d="M20 110a180 62 0 1 0 360 0a180 62 0 1 0-360 0" stroke="rgba(255,255,255,.08)" stroke-width="1" stroke-dasharray="2 6"/>
+          <path id="orbit-trail" d="M20 110a180 62 0 1 0 360 0a180 62 0 1 0-360 0" stroke="#E84E1B" stroke-width="1.4" stroke-linecap="round" opacity=".7"/>
+          <circle cx="200" cy="110" r="34" fill="url(#planet-g)"/>
+          <ellipse cx="200" cy="112" rx="56" ry="9" stroke="rgba(255,159,112,.45)" stroke-width="1.2"/>
+          <g id="orbit-rocket"></g>
+        </svg>
+      </div>
       <div class="serv-head">
         <div>
           <div class="idx r">01 — Servicios</div>
-          <h2 class="lead r" data-d="1" id="serv-title">Lo que<br><em>hacemos.</em></h2>
+          <h2 class="lead" id="serv-title">Lo que<br><em>hacemos.</em></h2>
         </div>
         <p class="r" data-d="2">Soluciones gráficas integrales — desde una valla de 8 metros hasta el sitio web que la respalda. Todo bajo un mismo equipo.</p>
       </div>
 
       <div class="serv-list">
-        <a href="/servicios/impresion-gran-formato" class="srow r" data-d="1">
+        <a href="/servicios/impresion-gran-formato" class="srow">
           <div class="snum">01</div>
           <div class="sbody">
             <div class="stitle">Impresión Gran Formato</div>
@@ -212,7 +235,7 @@ import BrandCarousel from '../components/BrandCarousel.astro';
           </div>
         </a>
 
-        <a href="/servicios/diseno-web" class="srow r" data-d="1">
+        <a href="/servicios/diseno-web" class="srow">
           <div class="snum">02</div>
           <div class="sbody">
             <div class="stitle">Diseño & Desarrollo Web</div>
@@ -223,7 +246,7 @@ import BrandCarousel from '../components/BrandCarousel.astro';
           </div>
         </a>
 
-        <a href="/servicios/material-pop" class="srow r" data-d="1">
+        <a href="/servicios/material-pop" class="srow">
           <div class="snum">03</div>
           <div class="sbody">
             <div class="stitle">Material P.O.P</div>
@@ -234,7 +257,7 @@ import BrandCarousel from '../components/BrandCarousel.astro';
           </div>
         </a>
 
-        <a href="/servicios/branding-identidad" class="srow r" data-d="1">
+        <a href="/servicios/branding-identidad" class="srow">
           <div class="snum">04</div>
           <div class="sbody">
             <div class="stitle">Branding & Identidad</div>
@@ -245,7 +268,7 @@ import BrandCarousel from '../components/BrandCarousel.astro';
           </div>
         </a>
 
-        <a href="/servicios/fotografia-publicitaria" class="srow r" data-d="1">
+        <a href="/servicios/fotografia-publicitaria" class="srow">
           <div class="snum">05</div>
           <div class="sbody">
             <div class="stitle">Fotografía Publicitaria</div>
@@ -256,7 +279,7 @@ import BrandCarousel from '../components/BrandCarousel.astro';
           </div>
         </a>
 
-        <a href="/servicios/campanas-integrales" class="srow r" data-d="1">
+        <a href="/servicios/campanas-integrales" class="srow">
           <div class="snum">06</div>
           <div class="sbody">
             <div class="stitle">Campañas Integrales</div>
@@ -273,10 +296,10 @@ import BrandCarousel from '../components/BrandCarousel.astro';
   <!-- ═══════════════════════════════════════════════
        NOSOTROS
   ═══════════════════════════════════════════════ -->
-  <section id="nos" aria-labelledby="nos-title">
+  <section id="nos" data-chapter="Tripulación" aria-labelledby="nos-title">
     <div class="wrap">
       <div class="nos-grid">
-        <div class="nos-fig r">
+        <div class="nos-fig">
           <div class="nos-frame">
             <span class="tag">El Estudio · Bogotá</span>
             <span class="yr">12</span>
@@ -288,7 +311,7 @@ import BrandCarousel from '../components/BrandCarousel.astro';
         </div>
         <div class="nos-txt r" data-d="2">
           <div class="idx">02 — Estudio</div>
-          <h2 class="lead" id="nos-title">Una década<br>haciendo <em>marcas<br>visibles.</em></h2>
+          <h2 class="lead" id="nos-title">Una década<br>haciendo <em>marcas</em><br><em>visibles.</em></h2>
           <p>Somos <strong>Grupo Crear</strong>, un equipo de diseño y producción gráfica que trabaja con gerentes y dueños de Pymes — gente que no tiene tiempo y necesita soluciones que funcionen.</p>
           <p>No vendemos piezas sueltas. Construimos sistemas visuales coherentes: lo que se imprime, lo que se publica y lo que se ve en el punto de venta hablan el mismo idioma.</p>
           <div class="nos-stats">
@@ -310,19 +333,19 @@ import BrandCarousel from '../components/BrandCarousel.astro';
   <!-- ═══════════════════════════════════════════════
        PORTAFOLIO
   ═══════════════════════════════════════════════ -->
-  <section id="port" aria-labelledby="port-title">
+  <section id="port" data-chapter="Planetas" aria-labelledby="port-title">
     <div class="wrap">
       <div class="serv-head">
         <div>
           <div class="idx r">03 — Trabajo</div>
-          <h2 class="lead r" data-d="1" id="port-title">Casos<br><em>reales.</em></h2>
+          <h2 class="lead" id="port-title">Casos<br><em>reales.</em></h2>
         </div>
         <p class="r" data-d="2">El cliente B2B compra cuando ve lo que hiciste para alguien como él. Aquí hay pruebas.</p>
       </div>
 
       <div class="port-grid">
         <!-- Proyecto A — Rebranding Nexus (imagen real) -->
-        <a href="#cto" class="proj a r" data-d="1">
+        <a href="#cto" class="proj a">
           <div class="proj-media">
             <img src="/rebranding_nexus.webp" alt="Rebranding Nexus — caso de estudio" loading="lazy" />
           </div>
@@ -335,9 +358,9 @@ import BrandCarousel from '../components/BrandCarousel.astro';
         </a>
 
         <!-- Proyecto B — Gran formato video -->
-        <a href="#cto" class="proj b r" data-d="2">
+        <a href="#cto" class="proj b">
           <div class="proj-media">
-            <video data-src="/Impresion-a-gran-formato_naranja_3.webm" autoplay loop muted playsinline aria-hidden="true"></video>
+            <video data-src="/Impresion-a-gran-formato_naranja_3.mp4" autoplay loop muted playsinline aria-hidden="true"></video>
           </div>
           <div class="arrow" aria-hidden="true">
             <svg viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H8M17 7v9"/></svg>
@@ -348,7 +371,7 @@ import BrandCarousel from '../components/BrandCarousel.astro';
         </a>
 
         <!-- Proyecto C — 3D naranja -->
-        <a href="#cto" class="proj c r" data-d="1">
+        <a href="#cto" class="proj c">
           <div class="proj-media">
             <img src="/alternativa_naranja3d.webp" alt="Modelado 3D naranja" loading="lazy" />
           </div>
@@ -361,9 +384,10 @@ import BrandCarousel from '../components/BrandCarousel.astro';
         </a>
 
         <!-- Proyecto D — Publicidad exterior video -->
-        <a href="#cto" class="proj d r" data-d="2">
+        <a href="#cto" class="proj d">
           <div class="proj-media">
-            <video data-src="/Publicidad_pantallaedificio_cocacola.webm" autoplay loop muted playsinline aria-hidden="true"></video>
+            <!-- 720p: la tarjeta de portafolio es mayor (~460 px) que la del collage -->
+            <video data-src="/Publicidad_pantallaedificio_cocacola_720.mp4" autoplay loop muted playsinline aria-hidden="true"></video>
           </div>
           <div class="arrow" aria-hidden="true">
             <svg viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H8M17 7v9"/></svg>
@@ -374,7 +398,7 @@ import BrandCarousel from '../components/BrandCarousel.astro';
         </a>
 
         <!-- Proyecto E — SEO/Web -->
-        <a href="#cto" class="proj e r" data-d="3">
+        <a href="#cto" class="proj e">
           <div class="bgfill f5"></div>
           <div class="arrow" aria-hidden="true">
             <svg viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H8M17 7v9"/></svg>
@@ -390,12 +414,12 @@ import BrandCarousel from '../components/BrandCarousel.astro';
   <!-- ═══════════════════════════════════════════════
        SEO
   ═══════════════════════════════════════════════ -->
-  <section id="seo" aria-labelledby="seo-title">
+  <section id="seo" data-chapter="Navegación" aria-labelledby="seo-title">
     <div class="wrap">
       <div class="serv-head">
         <div>
           <div class="idx r">04 — Posicionamiento</div>
-          <h2 class="lead r" data-d="1" id="seo-title">Para que<br>Google te <em>elija.</em></h2>
+          <h2 class="lead" id="seo-title">Para que<br>Google te <em>elija.</em></h2>
         </div>
         <p class="r" data-d="2">Cada proyecto digital nace optimizado para captar clientes con intención real de compra.</p>
       </div>
@@ -436,24 +460,26 @@ import BrandCarousel from '../components/BrandCarousel.astro';
   <!-- ═══════════════════════════════════════════════
        CONTACTO
   ═══════════════════════════════════════════════ -->
-  <section id="cto" aria-labelledby="cto-title">
+  <section id="cto" data-chapter="Aterrizaje" aria-labelledby="cto-title">
     <div class="cto-huge" aria-hidden="true">Crear</div>
     <div class="wrap">
       <div class="cto-grid">
         <div class="cto-l r">
+          <!-- Aterrizaje: el cohete desciende y se posa junto al titular (story.ts) -->
+          <div class="lander" aria-hidden="true"><span class="lander-dust"></span></div>
           <div class="idx">05 — Contacto</div>
           <h2 class="lead" id="cto-title">Hagamos<br><em>ruido.</em></h2>
           <p>Cuéntanos qué necesitas. Respondemos en menos de 24 horas con una propuesta concreta y sin compromiso.</p>
           <div class="cto-info">
-            <a href="mailto:info@grupocrear.com">
+            <a href={mailtoLink}>
               <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>
-              <b>info@grupocrear.com</b><span>Email</span>
+              <b>{contacto.email}</b><span>Email</span>
             </a>
-            <a href="tel:+576010000000">
+            <a href={telLink}>
               <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h4l2 5-3 2a12 12 0 0 0 5 5l2-3 5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/></svg>
-              <b>+57 (601) 000-0000</b><span>Teléfono</span>
+              <b>+57 {contacto.telefonoDisplay}</b><span>Teléfono</span>
             </a>
-            <a href="https://wa.me/573000000000" target="_blank" rel="noopener noreferrer">
+            <a href={waBase} target="_blank" rel="noopener noreferrer">
               <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21l1.6-4A8.5 8.5 0 1 1 8 19.4z"/><path d="M9 10c0 3 2 5 5 5"/></svg>
               <b>Escríbenos por WhatsApp</b><span>24/7</span>
             </a>
@@ -522,7 +548,10 @@ import BrandCarousel from '../components/BrandCarousel.astro';
 </Layout>
 
 <script>
-  import { gsap } from '../utils/gsap-config';
+  import { gsap, ScrollTrigger } from '../utils/gsap-config';
+  import { initStory } from '../scripts/story';
+
+  const setChapter = (name: string) => (window as any).__setChapter?.(name);
 
   // Mismo sistema que Podium:
   // • Sin pin — la sección sale de pantalla con scroll natural
@@ -536,6 +565,11 @@ import BrandCarousel from '../components/BrandCarousel.astro';
     const nav         = document.getElementById('nav');
     const navElements = document.querySelectorAll('#nav-brand, #nav .menu li, #burger');
     const taglineEl   = document.getElementById('hero-visual-tagline');
+
+    // Declarado aquí (no dentro de `if (taglineEl)`) porque initScrollSystem()
+    // también lo consulta: si vive en un bloque más interno, la lectura desde
+    // esa función lanza ReferenceError y corta la cadena de __checkAllLoaded.
+    const prefersRM = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     // ── Activar videos del collage — diferidos para no competir con el intro ──
     document.querySelectorAll<HTMLSourceElement>('#collage-container source[data-src]').forEach((s) => {
@@ -573,14 +607,11 @@ import BrandCarousel from '../components/BrandCarousel.astro';
       }, 0);
     }
 
-    // 2. Encendido progresivo de las estelas del canvas (Capa 2)
+    // 2. Encendido progresivo del cielo estrellado (StarField)
     // Solapamiento: inicia a los 1.0s (0.5s antes de que termine el preloader)
-    if ((window as any).lightfall) {
-      tl.to((window as any).lightfall, {
-        progress: 1.0,
-        duration: 3.5,
-        ease: 'expo.out',
-      }, 1.0);
+    const stars = (window as any).__stars;
+    if (stars && !prefersRM) {
+      tl.to(stars, { alpha: 0.55, duration: 3.5, ease: 'expo.out' }, 1.0);
     }
 
     // 3. Stagger en cascada para los elementos de navegación (Slide down + Fade-in)
@@ -638,7 +669,6 @@ import BrandCarousel from '../components/BrandCarousel.astro';
     if (taglineEl) {
       taglineEl.style.opacity = '1';
       const taglineChars = splitTaglineChars(taglineEl);
-      const prefersRM    = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
       if (prefersRM || !taglineChars.length) {
         taglineChars.forEach(c => (c.style.opacity = '1'));
@@ -684,15 +714,54 @@ import BrandCarousel from '../components/BrandCarousel.astro';
       const inner       = document.getElementById('meteor-inner')      as HTMLElement | null;
 
       // Aberración cromática reactiva a velocidad de scroll (Lenis velocity → feOffset)
-      let aberLerp = 0;
-      gsap.ticker.add(() => {
+      //
+      // Escribir `dx` en un feOffset invalida el filtro y fuerza el repintado de
+      // toda la capa filtrada — de lo más caro del pipeline de render. Antes esto
+      // corría en CADA frame sin condiciones, también con el scroll detenido
+      // (donde `off` es constante 0) y con el hero fuera de pantalla: long tasks
+      // continuas y TBT de 20 s en escritorio.
+      //
+      // Dos guardas: no tocar el DOM si el valor redondeado no cambió, y
+      // suspender el cálculo mientras el hero no esté en viewport.
+      let aberLerp    = 0;
+      let lastOff     = -1;   // -1 garantiza que la primera pasada sí escriba
+      let heroVisible = true;
+
+      const updateAberration = () => {
+        if (!heroVisible) return;
         const vel = Math.abs((window as any).__lenis?.velocity ?? 0);
         aberLerp += (vel - aberLerp) * 0.12;
-        const off = Math.min(aberLerp * 0.85, 12);
+        // 2 decimales: por debajo el desplazamiento es imperceptible en pantalla
+        const off = Math.round(Math.min(aberLerp * 0.85, 12) * 100) / 100;
+        if (off === lastOff) return;
+        lastOff = off;
         redOffset?.setAttribute('dx',  String(-off));
         blueOffset?.setAttribute('dx', String( off));
-      });
+      };
 
+      const resetAberration = () => {
+        lastOff = 0;
+        redOffset?.setAttribute('dx',  '0');
+        blueOffset?.setAttribute('dx', '0');
+      };
+
+      if (prefersRM) {
+        // Con reduced-motion el filtro se queda en reposo: nada que animar.
+        resetAberration();
+      } else {
+        gsap.ticker.add(updateAberration);
+
+        const heroEl = document.getElementById('hero-visual');
+        if (heroEl && 'IntersectionObserver' in window) {
+          new IntersectionObserver((entries) => {
+            heroVisible = entries[0].isIntersecting;
+            // Al salir de pantalla se neutraliza para no dejar el filtro congelado
+            if (!heroVisible) resetAberration();
+          }, { rootMargin: '100px' }).observe(heroEl);
+        }
+      }
+
+      setChapter('Ignición');
       gsap.set('#scroll-indicator', { opacity: 1 });
       gsap.set('#meteor-container', { scale: 1.8 });
 
@@ -728,6 +797,9 @@ import BrandCarousel from '../components/BrandCarousel.astro';
           end:     '+=160%',
           scrub:   1,
           invalidateOnRefresh: true,
+          onUpdate(self) {
+            setChapter(self.progress < 0.5 ? 'Ignición' : 'Despegue');
+          },
           onRefresh() {
             const w = window.innerWidth;
             const h = window.innerHeight;
@@ -737,6 +809,19 @@ import BrandCarousel from '../components/BrandCarousel.astro';
           },
         },
       });
+
+      // ── Cielo estrellado: Ignición enciende, Despegue salta a warp ──
+      //   t 0.0→1.0  alpha 0.55→1 (las estrellas ganan presencia tras el logo)
+      //   t 1.0→1.1  warp 0       (imagen 2: el cielo estrellado quieto, recién revelado)
+      //   t 1.1→1.75 warp 0→1     (estelas radiales, igual que la dispersión)
+      //   t 1.75→2.0 warp 1→0.03  (llegada: casi quieto al desanclar)
+      const stars = (window as any).__stars;
+      if (stars && !prefersRM) {
+        // immediateRender:false — el intro todavía está encendiendo alpha 0→0.55
+        tl.fromTo(stars, { alpha: 0.55 }, { alpha: 1, ease: 'none', duration: 1.0, immediateRender: false }, 0);
+        tl.fromTo(stars, { warp: 0 }, { warp: 1, ease: 'power2.in', duration: 0.65 }, 1.1);
+        tl.fromTo(stars, { warp: 1 }, { warp: 0.03, ease: 'power2.out', duration: 0.25, immediateRender: false }, 1.75);
+      }
 
       // ── Meteor animations integrated into the main timeline ──
       // This synchronizes the video scrubbing and 3D transforms with the pinned ScrollTrigger tl.
@@ -849,13 +934,13 @@ import BrandCarousel from '../components/BrandCarousel.astro';
           {
             x: 0, y: 0, z: 0, scaleX: 1, scaleY: 1,
             rotateX: 0, rotateY: 0, skewX: 0,
-            filter: 'blur(0px) brightness(1) contrast(1)',
             transformPerspective: 1000, opacity: 1,
           },
           {
             x: tx, y: ty, z: 450, scaleX: 3.5, scaleY: 2.2,
             rotateX: rx, rotateY: ry, skewX: sk,
-            filter: 'blur(18px) brightness(2.2) contrast(1.1)',
+            // Sin filter: blur() animado — repinta 5 capas por frame. La velocidad
+            // la venden las estelas del StarField y la aberración cromática.
             opacity: 0, ease: 'power2.in', duration: 1.0,
           },
           1.0,
@@ -872,6 +957,13 @@ import BrandCarousel from '../components/BrandCarousel.astro';
         { scale:1.8, opacity:0, ease:'power2.in', duration:1.0 },
         1.0,
       );
+
+      // Capítulos 2-5: se crean después del pin para medir con el pin-spacer ya puesto
+      initStory();
+      // Los triggers de capítulo del rail/HUD (Layout) se crean ahora, con los pins ya puestos
+      window.dispatchEvent(new CustomEvent('story:ready'));
+      ScrollTrigger.sort();
+      ScrollTrigger.refresh();
     }
   });
 
@@ -890,6 +982,19 @@ import BrandCarousel from '../components/BrandCarousel.astro';
       });
     }, { rootMargin: '300px' });
     lazyVideos.forEach((v) => vidObs.observe(v));
+  }
+
+  // Los vídeos en loop siguen decodificando aunque no se vean: pausarlos fuera de pantalla
+  const loopVideos = document.querySelectorAll<HTMLVideoElement>('main video[autoplay]');
+  if (loopVideos.length) {
+    const playObs = new IntersectionObserver((entries) => {
+      entries.forEach(({ target, isIntersecting }) => {
+        const v = target as HTMLVideoElement;
+        if (isIntersecting) v.play().catch(() => {});
+        else v.pause();
+      });
+    });
+    loopVideos.forEach((v) => playObs.observe(v));
   }
 </script>
 

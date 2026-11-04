@@ -4,6 +4,7 @@ import Footer from '../../components/Footer.astro';
 import ContactDialog from '../../components/ContactDialog.astro';
 import RocketCursor from '../../components/RocketCursor.astro';
 import { servicios } from '../../data/servicios';
+import { waBase } from '../../data/contacto';
 
 // ── Galería: deduplicación por src + categorías múltiples ─────────────────
 // Problema: Material POP reutiliza fotos del mismo archivo que Gran Formato.
@@ -103,7 +104,7 @@ const stripColFotos = Array.from({ length: STRIP_COLS }, (_, ci) =>
         <div class="hc hc-3">
           <!-- Video circular pequeño -->
           <video autoplay loop muted playsinline>
-            <source src="/Impresion-a-gran-formato_naranja_3.webm" type="video/webm" />
+            <source src="/Impresion-a-gran-formato_naranja_3.mp4" type="video/mp4" />
           </video>
         </div>
       </div>
@@ -287,7 +288,7 @@ const stripColFotos = Array.from({ length: STRIP_COLS }, (_, ci) =>
           <h2 id="cto-title" class="cto-card-title">Respuesta rápida</h2>
           <p class="cto-card-desc">Cuéntanos qué necesitas. Respondemos en menos de 24 horas con una propuesta concreta y sin compromiso.</p>
           <a
-            href="https://wa.me/573000000000"
+            href={waBase}
             class="btn-fill cto-card-btn"
             target="_blank"
             rel="noopener noreferrer"

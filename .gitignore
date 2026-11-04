@@ -32,3 +32,6 @@ pnpm-debug.log*
 
 # agents
 agents.md
+# medios originales y capturas pesadas
+media-originales/
+docs/auditoria-capturas/

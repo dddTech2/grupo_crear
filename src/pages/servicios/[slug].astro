@@ -6,6 +6,7 @@ import RocketCursor from '../../components/RocketCursor.astro';
 import EntregablesSection from '../../components/EntregablesSection.astro';
 import { servicios } from '../../data/servicios';
 import type { Servicio, Foto } from '../../data/servicios';
+import { waBase } from '../../data/contacto';
 
 export function getStaticPaths() {
   return servicios.map(s => ({
@@ -100,7 +101,7 @@ const pasos = s.pasos;
           <p class="sub-desc" id="sub-desc">{s.descripcionLarga}</p>
           <div class="sub-acts" id="sub-acts">
             <a
-              href={`https://wa.me/573000000000?text=${s.whatsappText}`}
+              href={`${waBase}?text=${s.whatsappText}`}
               class="btn-fill"
               target="_blank"
               rel="noopener noreferrer"
@@ -279,7 +280,7 @@ const pasos = s.pasos;
           <h2 id="cto-title" class="cto-card-title">Respuesta rápida</h2>
           <p class="cto-card-desc">Cuéntanos qué necesitas. Respondemos en menos de 24 horas con una propuesta concreta y sin compromiso.</p>
           <a
-            href={`https://wa.me/573000000000?text=${s.whatsappText}`}
+            href={`${waBase}?text=${s.whatsappText}`}
             class="btn-fill cto-card-btn"
             target="_blank"
             rel="noopener noreferrer"

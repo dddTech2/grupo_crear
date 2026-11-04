@@ -1,4 +1,23 @@
 ---
+/*
+  Cursor cohete: usa el MISMO path del cohete del isotipo (primer path naranja
+  de /public/logo-Grupo-Crear-vector_sintext.svg), así cursor, logo y favicon
+  son la misma silueta. En el logo el cohete va inclinado ~45°; aquí se
+  endereza (rotate(-45)) y se escala a un viewBox 36×36 con la nariz arriba,
+  porque el script lo rota según la dirección del movimiento (+90°).
+
+  Geometría medida en el logo (coordenadas ya rotadas −45°):
+    eje x ≈ 666 · nariz y ≈ −476 · tobera y ≈ −188 · alto 307.6
+  k = 26 / 307.6 → el cohete ocupa y 1.5…27.5 y la llama sale de y ≈ 25.8.
+*/
+import { readFileSync } from 'node:fs';
+import { resolve }      from 'node:path';
+
+let rocketD = '';
+try {
+  const svgRaw = readFileSync(resolve('public/logo-Grupo-Crear-vector_sintext.svg'), 'utf-8');
+  rocketD = svgRaw.match(/<path\s+class="b"\s+d="([^"]+)"/)?.[1] ?? '';
+} catch (_) {}
 ---
 
 <div id="rocketCursor" aria-hidden="true">
@@ -9,23 +28,21 @@
     viewBox="0 0 36 36"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
-    style="display:block;filter:drop-shadow(0 4px 10px rgba(232,78,27,.45));"
+    shape-rendering="geometricPrecision"
+    style="display:block;filter:drop-shadow(0 3px 8px rgba(232,78,27,.45));"
   >
-    <!-- Llama del motor (escala reactiva a velocidad) -->
-    <g id="rocket-flame" style="transform-origin:18px 32px;">
-      <ellipse cx="18" cy="31" rx="4"   ry="5"   fill="#E84E1B" opacity="0.9"/>
-      <ellipse cx="18" cy="33" rx="2.5" ry="3.5" fill="#ff8c42" opacity="0.8"/>
-      <ellipse cx="18" cy="34.5" rx="1.2" ry="2" fill="#fff"    opacity="0.7"/>
+    <!-- Llama del motor (escala reactiva a velocidad), detrás del cuerpo -->
+    <g id="rocket-flame" style="transform-origin:18.2px 25.8px;">
+      <ellipse cx="18.2" cy="29.6" rx="2.9" ry="4.4" fill="#E84E1B" opacity="0.9"/>
+      <ellipse cx="18.2" cy="30.8" rx="1.8" ry="3.1" fill="#ff8c42" opacity="0.85"/>
+      <ellipse cx="18.2" cy="31.6" rx="0.9" ry="1.8" fill="#fff"    opacity="0.75"/>
     </g>
-    <!-- Cuerpo -->
-    <path d="M18 2C18 2 11 10 11 20V26H25V20C25 10 18 2 18 2Z" fill="#E84E1B"/>
-    <path d="M11 20V26H25V20C25 10 18 2 18 2C18 2 25 10 25 20Z" fill="#c23e12" opacity="0.4"/>
-    <!-- Ventana -->
-    <circle cx="18" cy="16" r="3.5" fill="#001433" stroke="#f0f4ff" stroke-width="1.2"/>
-    <circle cx="17" cy="15" r="1"   fill="#8facc8" opacity="0.6"/>
-    <!-- Aletas -->
-    <path d="M11 22L6 27L11 26V22Z"  fill="#c23e12"/>
-    <path d="M25 22L30 27L25 26V22Z" fill="#c23e12"/>
+    <!-- Cohete del isotipo, enderezado -->
+    <g transform="translate(-38.28 41.72) scale(0.0845) rotate(-45)">
+      <!-- La ventana del logo es un hueco: se rellena para que no deje ver la página -->
+      <circle cx="737.5" cy="206.6" r="20" fill="#001433"/>
+      <path d={rocketD} fill="#E84E1B"/>
+    </g>
   </svg>
 </div>
 
