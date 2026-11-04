@@ -144,11 +144,7 @@ import { contacto, waBase, telLink, mailtoLink } from '../data/contacto';
   <section id="hero-content" data-chapter="Despegue" class="relative min-h-screen w-full flex flex-col justify-center bg-[#001433]" style="padding: clamp(80px,11vw,150px) clamp(20px,5vw,64px);" aria-label="Hero principal">
     <div style="max-width:1100px;">
 
-      <div class="kick" id="hero-kick" style="opacity:0;transform:translateY(16px);">
-        <i></i><span>Agencia de publicidad · Bogotá, Colombia</span>
-      </div>
-
-      <h1 class="big" id="hero-title" style="margin-top:clamp(24px,4vw,40px);">
+      <h1 class="big" id="hero-title">
         <span class="ln"><span style="opacity:0;transform:translateY(105%);">Hacemos que tu</span></span>
         <span class="ln"><span style="opacity:0;transform:translateY(105%);">marca <em>haga ruido.</em></span></span>
       </h1>
@@ -217,7 +213,6 @@ import { contacto, waBase, telLink, mailtoLink } from '../data/contacto';
       </div>
       <div class="serv-head">
         <div>
-          <div class="idx r">01 — Servicios</div>
           <h2 class="lead" id="serv-title">Lo que<br><em>hacemos.</em></h2>
         </div>
         <p class="r" data-d="2">Soluciones gráficas integrales — desde una valla de 8 metros hasta el sitio web que la respalda. Todo bajo un mismo equipo.</p>
@@ -310,7 +305,6 @@ import { contacto, waBase, telLink, mailtoLink } from '../data/contacto';
           </div>
         </div>
         <div class="nos-txt r" data-d="2">
-          <div class="idx">02 — Estudio</div>
           <h2 class="lead" id="nos-title">Una década<br>haciendo <em>marcas</em><br><em>visibles.</em></h2>
           <p>Somos <strong>Grupo Crear</strong>, un equipo de diseño y producción gráfica que trabaja con gerentes y dueños de Pymes — gente que no tiene tiempo y necesita soluciones que funcionen.</p>
           <p>No vendemos piezas sueltas. Construimos sistemas visuales coherentes: lo que se imprime, lo que se publica y lo que se ve en el punto de venta hablan el mismo idioma.</p>
@@ -337,7 +331,6 @@ import { contacto, waBase, telLink, mailtoLink } from '../data/contacto';
     <div class="wrap">
       <div class="serv-head">
         <div>
-          <div class="idx r">03 — Trabajo</div>
           <h2 class="lead" id="port-title">Casos<br><em>reales.</em></h2>
         </div>
         <p class="r" data-d="2">El cliente B2B compra cuando ve lo que hiciste para alguien como él. Aquí hay pruebas.</p>
@@ -418,7 +411,6 @@ import { contacto, waBase, telLink, mailtoLink } from '../data/contacto';
     <div class="wrap">
       <div class="serv-head">
         <div>
-          <div class="idx r">04 — Posicionamiento</div>
           <h2 class="lead" id="seo-title">Para que<br>Google te <em>elija.</em></h2>
         </div>
         <p class="r" data-d="2">Cada proyecto digital nace optimizado para captar clientes con intención real de compra.</p>
@@ -467,7 +459,6 @@ import { contacto, waBase, telLink, mailtoLink } from '../data/contacto';
         <div class="cto-l r">
           <!-- Aterrizaje: el cohete desciende y se posa junto al titular (story.ts) -->
           <div class="lander" aria-hidden="true"><span class="lander-dust"></span></div>
-          <div class="idx">05 — Contacto</div>
           <h2 class="lead" id="cto-title">Hagamos<br><em>ruido.</em></h2>
           <p>Cuéntanos qué necesitas. Respondemos en menos de 24 horas con una propuesta concreta y sin compromiso.</p>
           <div class="cto-info">
@@ -696,8 +687,7 @@ import { contacto, waBase, telLink, mailtoLink } from '../data/contacto';
         toggleActions: 'play none none none',
       },
     })
-    .to('#hero-kick',            { opacity:1, y:0, duration:.7, ease:'power4.out' })
-    .to('#hero-title span span', { opacity:1, y:0, duration:.9, stagger:.13, ease:'power4.out' }, '-=0.4')
+    .to('#hero-title span span', { opacity:1, y:0, duration:.9, stagger:.13, ease:'power4.out' })
     .to(['#hero-lead','#hero-actions'], { opacity:1, y:0, duration:.7, stagger:.1, ease:'power4.out' }, '-=0.5');
 
     // ── Sistema de scroll del hero ──────────────────────────────────────────

@@ -154,10 +154,6 @@ try {
     @keyframes breathe{from{transform:scale(.9) translate(0,0);opacity:.7}to{transform:scale(1.08) translate(-3%,4%);opacity:1}}
     .hero-out{position:absolute;left:clamp(20px,5vw,64px);top:18%;font-family:'Sofia Sans Condensed';font-size:clamp(220px,34vw,520px);line-height:.8;font-weight:900;color:transparent;-webkit-text-stroke:1px rgba(255,255,255,.05);letter-spacing:-.03em;pointer-events:none;user-select:none;white-space:nowrap;z-index:1}
     .hero-in{position:relative;z-index:6;max-width:600px}
-    .kick{display:inline-flex;align-items:center;gap:12px;font-size:13px;letter-spacing:.18em;text-transform:uppercase;color:var(--w60);margin-bottom:clamp(24px,4vw,40px);overflow:hidden}
-    .kick i{display:block;width:42px;height:1px;background:var(--n)}
-    /* Estado inicial oculto — GSAP anima la entrada en Phase 2 */
-    .kick span{display:inline-block;transform:translateY(110%)}
     h1.big{font-family:'Sofia Sans Condensed';font-weight:900;font-size:clamp(60px,10vw,150px);line-height:.86;letter-spacing:-.04em;text-transform:uppercase}
     h1.big .ln{display:block;overflow:hidden}
     h1.big .ln span{display:block;transform:translateY(105%)}
@@ -215,30 +211,7 @@ try {
     /* section frame */
     section{padding:clamp(80px,11vw,150px) clamp(20px,5vw,64px)}
     .wrap{max-width:1240px;margin:0 auto}
-    /* ── IDX — Section label tag premium ── */
-    .idx{
-      font-family:'Sofia Sans Condensed',sans-serif;
-      font-size:10px;letter-spacing:.26em;text-transform:uppercase;
-      color:var(--n);
-      display:inline-flex;align-items:center;gap:10px;
-      margin-bottom:clamp(16px,2.5vw,28px);
-      width:fit-content;
-      position:relative;
-    }
-    /* Punto pulsante — indicador de "activo / en vivo" */
-    .idx::before{
-      content:'';
-      width:5px;height:5px;border-radius:50%;
-      background:var(--n);
-      flex-shrink:0;
-      animation:idx-pulse 2.8s ease-in-out infinite;
-    }
-    /* Línea corta de cierre */
-    .idx::after{
-      content:'';
-      width:22px;height:1px;
-      background:linear-gradient(90deg,rgba(232,78,27,.55),transparent);
-    }
+    /* Pulso del punto del HUD de misión */
     @keyframes idx-pulse{
       0%,100%{box-shadow:0 0 0 0 rgba(232,78,27,.5)}
       55%    {box-shadow:0 0 0 5px rgba(232,78,27,0)}
@@ -679,16 +652,21 @@ try {
     // Triggers de capítulo. Una sección pinneada (Planetas en escritorio) mide mal
     // su propio alto: el recorrido extra vive en su .pin-spacer, así que se usa ese
     // envoltorio. Por eso en la home se crean DESPUÉS de los pins (evento story:ready).
+    // El capítulo activo es el último cuya sección ya cruzó el centro del viewport.
+    // Se calcula en cada update (y no con onToggle) para que un salto largo
+    // (tecla Fin, clic en un ancla) también deje el capítulo correcto.
     const createChapterTriggers = () => {
-      chapterSecs.forEach((sec) => {
-        const box = sec.parentElement?.classList.contains('pin-spacer') ? sec.parentElement : sec;
-        ScrollTrigger.create({
-          trigger: box,
-          start: 'top center',
-          end: 'bottom center',
-          onToggle: (self) => { if (self.isActive) setChapter(sec.dataset.chapter!); },
-        });
-      });
+      const marks = chapterSecs.map((sec) => ScrollTrigger.create({
+        trigger: sec.parentElement?.classList.contains('pin-spacer') ? sec.parentElement : sec,
+        start: 'top center',
+      }));
+      const pick = (y: number) => {
+        let name: string | undefined;
+        marks.forEach((m, i) => { if (y >= m.start) name = chapterSecs[i].dataset.chapter; });
+        if (name) setChapter(name); // antes del primer capítulo manda el pin del hero
+      };
+      const doc = ScrollTrigger.create({ start: 0, end: 'max', onUpdate: (self) => pick(self.scroll()) });
+      pick(doc.scroll());
     };
     if (document.getElementById('hero-visual')) {
       window.addEventListener('story:ready', createChapterTriggers, { once: true });

@@ -31,10 +31,6 @@ const { entregables } = Astro.props;
     <aside class="ent-left">
       <div class="ent-sticky">
 
-        <p class="ent-kicker">
-          <span class="ent-kicker-line" aria-hidden="true"></span>
-          Entregables
-        </p>
 
         <!-- Massive heading with mask-reveal -->
         <h2 id="ent-heading" class="ent-heading" aria-label="Qué incluye">
@@ -199,22 +195,6 @@ const { entregables } = Astro.props;
   gap: clamp(22px, 3vw, 34px);
 }
 
-/* Kicker */
-.ent-kicker {
-  font-family: 'Sofia Sans Condensed', sans-serif;
-  font-size: 11px;
-  letter-spacing: .22em;
-  text-transform: uppercase;
-  color: var(--n);
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-.ent-kicker-line {
-  width: 32px; height: 1px;
-  background: var(--n);
-  flex-shrink: 0;
-}
 
 /* Heading masivo con mask-reveal */
 .ent-heading {
@@ -562,7 +542,7 @@ const { entregables } = Astro.props;
      Palabras entran desde abajo del clip-path
   ───────────────────────────────────────── */
   gsap.set('.ent-word',    { y: '108%' });
-  gsap.set(['.ent-kicker', '.ent-readout', '.ent-track'], {
+  gsap.set(['.ent-readout', '.ent-track'], {
     opacity: 0, y: 16,
   });
 
@@ -578,7 +558,7 @@ const { entregables } = Astro.props;
           ease: 'power4.out',
           stagger: 0.1,
         });
-        gsap.to(['.ent-kicker', '.ent-readout', '.ent-track'], {
+        gsap.to(['.ent-readout', '.ent-track'], {
           opacity: 1, y: 0,
           duration: 0.8, delay: 0.28,
           ease: 'power3.out',
@@ -586,7 +566,7 @@ const { entregables } = Astro.props;
         });
       } else {
         gsap.set('.ent-word', { y: '0%' });
-        gsap.set(['.ent-kicker', '.ent-readout', '.ent-track'], { opacity: 1, y: 0 });
+        gsap.set(['.ent-readout', '.ent-track'], { opacity: 1, y: 0 });
       }
     },
   });

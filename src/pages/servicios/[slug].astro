@@ -93,7 +93,6 @@ const pasos = s.pasos;
       <div class="sub-grid">
         <!-- Texto -->
         <div class="sub-txt">
-          <div class="idx">{s.numero} — {s.nombreCorto}</div>
           <h1 class="lead sub-h1" id="sub-h1">
             <span class="ln"><span>{s.nombre.split(' ').slice(0,-1).join(' ')}</span></span>
             <span class="ln"><span><em>{s.nombre.split(' ').slice(-1)[0]}.</em></span></span>
@@ -151,7 +150,6 @@ const pasos = s.pasos;
   ═══════════════════════════════════════ -->
   <section id="proceso" aria-labelledby="proc-title" class="sub-section">
     <div class="wrap">
-      <div class="idx r">Metodología</div>
       <h2 class="lead r" data-d="1" id="proc-title">Cómo <em>trabajamos.</em></h2>
       <div class="proc-track">
         {pasos.map((p, i) => (
@@ -172,7 +170,6 @@ const pasos = s.pasos;
   ═══════════════════════════════════════ -->
   <section id="galeria-serv" aria-labelledby="gal-serv-title" class="sub-section-alt">
     <div class="wrap">
-      <div class="idx r">Trabajos realizados</div>
       <h2 class="lead r" data-d="1" id="gal-serv-title">Proyectos de <em>{s.nombreCorto}.</em></h2>
 
       {hayFotos ? (
@@ -217,7 +214,6 @@ const pasos = s.pasos;
     <div class="wrap">
       <div class="serv-head">
         <div>
-          <div class="idx r">Más servicios</div>
           <h2 class="lead r" data-d="1" id="otros-title">También <em>hacemos.</em></h2>
         </div>
         <a href="/servicios" class="btn-line r" data-d="2">Ver todos →</a>
@@ -275,7 +271,6 @@ const pasos = s.pasos;
                 <path d="M9 10c0 3 2 5 5 5"/>
               </svg>
             </div>
-            <span class="cto-card-kicker">Respuesta inmediata</span>
           </div>
           <h2 id="cto-title" class="cto-card-title">Respuesta rápida</h2>
           <p class="cto-card-desc">Cuéntanos qué necesitas. Respondemos en menos de 24 horas con una propuesta concreta y sin compromiso.</p>
@@ -302,7 +297,6 @@ const pasos = s.pasos;
                 <path d="M3 7l9 6 9-6"/>
               </svg>
             </div>
-            <span class="cto-card-kicker">Propuesta formal</span>
           </div>
           <h3 class="cto-card-title">Cotización formal</h3>
           <p class="cto-card-desc">Prefiere un presupuesto detallado por escrito. Llena el formulario y te respondemos con una cotización estructurada.</p>
@@ -649,14 +643,6 @@ const pasos = s.pasos;
   width: 24px;
   height: 24px;
 }
-.cto-card-kicker {
-  font-family: 'Sofia Sans Condensed', sans-serif;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--w40);
-}
 .cto-card-title {
   font-family: 'Sofia Sans Condensed', sans-serif;
   font-size: clamp(24px, 3vw, 42px);
@@ -810,13 +796,11 @@ const pasos = s.pasos;
   /* ── HERO ENTRANCE ── */
   if (!prefersRM) {
     // Seteamos el estado inicial en JS de inmediato
-    gsap.set('.sub-txt .idx', { opacity: 0, y: 16 });
     gsap.set('.sub-desc',     { opacity: 0, y: 20 });
     gsap.set('.sub-acts',     { opacity: 0, y: 16 });
     gsap.set('.sub-img-wrap', { opacity: 0, x: 30 });
 
     gsap.timeline({ defaults: { ease: 'power4.out' } })
-      .to('.sub-txt .idx',     { opacity: 1, y: 0, duration: .6 }, .15)
       .from('.sub-h1 .ln span',  { y: '105%', stagger: .12, duration: .9 }, .25)
       .to('.sub-desc',         { opacity: 1, y: 0, duration: .7 }, '-=.5')
       .to('.sub-acts',         { opacity: 1, y: 0, duration: .6 }, '-=.4')

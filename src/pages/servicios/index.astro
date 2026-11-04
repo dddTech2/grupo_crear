@@ -80,7 +80,6 @@ const stripColFotos = Array.from({ length: STRIP_COLS }, (_, ci) =>
     <div class="wrap sh-grid">
       <!-- Columna texto -->
       <div class="sh-txt">
-        <div class="idx" id="sh-idx">00 — Servicios</div>
 
         <h1 class="lead sh-h1" id="sh-h1" aria-label="Seis disciplinas. Una sola dirección.">
           <span class="ln"><span>Seis disciplinas.</span></span>
@@ -149,7 +148,6 @@ const stripColFotos = Array.from({ length: STRIP_COLS }, (_, ci) =>
     <div class="wrap">
       <div class="serv-head">
         <div>
-          <div class="idx r">01 — Nuestros servicios</div>
           <h2 class="lead r" data-d="1" id="bento-title">Lo que <em>hacemos.</em></h2>
         </div>
         <p class="r" data-d="2">
@@ -211,7 +209,6 @@ const stripColFotos = Array.from({ length: STRIP_COLS }, (_, ci) =>
   <section id="galeria" aria-labelledby="gal-title">
     <div class="wrap">
       <div class="gal-header">
-        <div class="idx r">02 — Portafolio</div>
         <h2 class="lead r" data-d="1" id="gal-title">El trabajo <em>habla solo.</em></h2>
         <p class="r" data-d="2">
           Más de 100 proyectos entregados. Filtra por categoría.
@@ -283,7 +280,6 @@ const stripColFotos = Array.from({ length: STRIP_COLS }, (_, ci) =>
                 <path d="M9 10c0 3 2 5 5 5"/>
               </svg>
             </div>
-            <span class="cto-card-kicker">Respuesta inmediata</span>
           </div>
           <h2 id="cto-title" class="cto-card-title">Respuesta rápida</h2>
           <p class="cto-card-desc">Cuéntanos qué necesitas. Respondemos en menos de 24 horas con una propuesta concreta y sin compromiso.</p>
@@ -310,7 +306,6 @@ const stripColFotos = Array.from({ length: STRIP_COLS }, (_, ci) =>
                 <path d="M3 7l9 6 9-6"/>
               </svg>
             </div>
-            <span class="cto-card-kicker">Propuesta formal</span>
           </div>
           <h3 class="cto-card-title">Cotización formal</h3>
           <p class="cto-card-desc">Prefiere un presupuesto detallado por escrito. Llena el formulario y te respondemos con una cotización estructurada.</p>
@@ -927,14 +922,6 @@ const stripColFotos = Array.from({ length: STRIP_COLS }, (_, ci) =>
   width: 24px;
   height: 24px;
 }
-.cto-card-kicker {
-  font-family: 'Sofia Sans Condensed', sans-serif;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--w40);
-}
 .cto-card-title {
   font-family: 'Sofia Sans Condensed', sans-serif;
   font-size: clamp(24px, 3vw, 42px);
@@ -1011,13 +998,10 @@ const stripColFotos = Array.from({ length: STRIP_COLS }, (_, ci) =>
 
   if (!prefersRM) {
     // Seteamos el estado inicial en JS de inmediato para evitar FOUC
-    gsap.set('#sh-idx',   { opacity: 0, y: 16 });
     gsap.set('#sh-sub',   { opacity: 0, y: 20 });
     gsap.set('#sh-pills', { opacity: 0, y: 16 });
 
     gsap.timeline({ defaults: { ease: 'power4.out' } })
-      // Label índice
-      .to('#sh-idx',            { opacity: 1, y: 0, duration: .6 }, .15)
       // Líneas del h1 — slide-up desde overflow hidden (animación a 0%)
       .to('#sh-h1 .ln span',      { y: '0%', stagger: .12, duration: .9 }, .25)
       // Subtítulo

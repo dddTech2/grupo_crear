@@ -48,29 +48,7 @@ const activeLinks = legalLinks.filter((l) => l.active);
 
   <div class="foot-container">
 
-    <!-- ── 1. PRE-FOOTER CTA BANNER ────────────────────────────────────────── -->
-    <div class="foot-cta-banner">
-      <div class="foot-cta-content">
-        <span class="foot-cta-tag">
-          <span class="pulse-dot"></span>
-          ¿HABLAMOS DE TU PRÓXIMO PROYECTO?
-        </span>
-        <h2 class="foot-cta-title">HAGAMOS QUE TU MARCA SE VEA, SE RECUERDE Y VENDA</h2>
-        <p class="foot-cta-sub">
-          Soluciones gráficas de alto impacto, impresión gran formato, POP, branding y experiencia digital.
-        </p>
-      </div>
-      <div class="foot-cta-action">
-        <a href="#cto" class="foot-btn-primary">
-          <span>INICIAR COTIZACIÓN</span>
-          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M5 12h14M12 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </a>
-      </div>
-    </div>
-
-    <!-- ── 2. MAIN GRID LAYOUT ───────────────────────────────────────────── -->
+    <!-- ── 1. MAIN GRID LAYOUT ───────────────────────────────────────────── -->
     <div class="foot-main-grid">
 
       <!-- Columna 1: Marca & Contacto rápido -->
@@ -202,7 +180,7 @@ const activeLinks = legalLinks.filter((l) => l.active);
 
     </div>
 
-    <!-- ── 3. VÍNCULOS LEGALES (SI EXISTEN ACTIVOS) ────────────────────── -->
+    <!-- ── 2. VÍNCULOS LEGALES (SI EXISTEN ACTIVOS) ────────────────────── -->
     {activeLinks.length > 0 && (
       <nav aria-label="Vínculos legales" class="foot-legal-nav">
         <ul role="list" class="foot-legal-list">
@@ -215,7 +193,7 @@ const activeLinks = legalLinks.filter((l) => l.active);
       </nav>
     )}
 
-    <!-- ── 4. FOOTER BOTTOM BAR ─────────────────────────────────────────── -->
+    <!-- ── 3. FOOTER BOTTOM BAR ─────────────────────────────────────────── -->
     <div class="foot-bottom-bar">
       <p class="foot-copyright">
         © <span id="foot-year">{year}</span> <strong>Grupo Crear</strong>. Todos los derechos reservados.
@@ -290,97 +268,7 @@ const activeLinks = legalLinks.filter((l) => l.active);
     margin: 0 auto;
   }
 
-  /* ── 1. BANNER PRE-FOOTER CTA ────────────────────────────────────────── */
-  .foot-cta-banner {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 32px;
-    padding: clamp(40px, 5vw, 60px) 0;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.07);
-    flex-wrap: wrap;
-  }
-
-  .foot-cta-content {
-    max-width: 720px;
-  }
-
-  .foot-cta-tag {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    font-family: 'Sofia Sans Condensed', sans-serif;
-    font-size: 11px;
-    letter-spacing: 0.22em;
-    text-transform: uppercase;
-    color: var(--n);
-    margin-bottom: 12px;
-  }
-
-  .pulse-dot {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: var(--n);
-    box-shadow: 0 0 10px var(--n);
-    animation: pulse-glow 2s infinite ease-in-out;
-  }
-
-  @keyframes pulse-glow {
-    0%, 100% { transform: scale(1); opacity: 0.8; }
-    50% { transform: scale(1.4); opacity: 1; box-shadow: 0 0 16px var(--n); }
-  }
-
-  .foot-cta-title {
-    font-family: 'Sofia Sans Condensed', sans-serif;
-    font-weight: 900;
-    font-size: clamp(28px, 4vw, 48px);
-    line-height: 0.95;
-    letter-spacing: -0.02em;
-    text-transform: uppercase;
-    color: #fff;
-    margin-bottom: 12px;
-  }
-
-  .foot-cta-sub {
-    font-size: clamp(14px, 1.2vw, 16px);
-    color: var(--w60);
-    line-height: 1.5;
-  }
-
-  .foot-btn-primary {
-    display: inline-flex;
-    align-items: center;
-    gap: 12px;
-    background: var(--n);
-    color: #fff;
-    text-decoration: none;
-    padding: 16px 28px;
-    border-radius: 100px;
-    font-family: 'Sofia Sans Condensed', sans-serif;
-    font-weight: 700;
-    font-size: 15px;
-    letter-spacing: 0.08em;
-    transition: all 0.35s var(--ease);
-    box-shadow: 0 8px 24px rgba(232, 78, 27, 0.25);
-    white-space: nowrap;
-  }
-
-  .foot-btn-primary:hover {
-    background: var(--n-d);
-    transform: translateY(-2px);
-    box-shadow: 0 12px 30px rgba(232, 78, 27, 0.4);
-  }
-
-  .foot-btn-primary svg {
-    transition: transform 0.3s ease;
-  }
-
-  .foot-btn-primary:hover svg {
-    transform: translateX(4px);
-  }
-
-  /* ── 2. GRID PRINCIPAL ────────────────────────────────────────────────── */
+  /* ── 1. GRID PRINCIPAL ────────────────────────────────────────────────── */
   .foot-main-grid {
     display: grid;
     grid-template-columns: 2fr 1fr 1fr 1.2fr;
@@ -552,7 +440,7 @@ const activeLinks = legalLinks.filter((l) => l.active);
     color: #fff;
   }
 
-  /* ── 3. LEGALES ────────────────────────────────────────────────────────── */
+  /* ── 2. LEGALES ────────────────────────────────────────────────────────── */
   .foot-legal-nav {
     padding: 20px 0;
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
@@ -578,7 +466,7 @@ const activeLinks = legalLinks.filter((l) => l.active);
     color: var(--w60);
   }
 
-  /* ── 4. BOTTOM BAR CON ESPACIO DE SEGURIDAD ──────────────────────────── */
+  /* ── 3. BOTTOM BAR CON ESPACIO DE SEGURIDAD ──────────────────────────── */
   .foot-bottom-bar {
     display: flex;
     justify-content: space-between;
@@ -642,11 +530,6 @@ const activeLinks = legalLinks.filter((l) => l.active);
   }
 
   @media (max-width: 680px) {
-    .foot-cta-banner {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 24px;
-    }
     .foot-main-grid {
       grid-template-columns: 1fr;
       gap: 36px;

@@ -175,6 +175,16 @@ pero inflan el despliegue. Pregúntame antes de borrarlos.
 
 ## Reglas
 
+- Por decisión del usuario se eliminaron elementos que la auditoría todavía cita. No los vuelvas a
+  crear:
+  - el banner CTA del footer (`.foot-cta-banner`, `.foot-btn-primary`, `.pulse-dot`);
+  - todos los tags o *eyebrows* sobre los títulos: `.kick`/`#hero-kick`, `.idx` («01 — Servicios», etc.),
+    `.ent-kicker` y `.cto-card-kicker`.
+
+  Los hallazgos que dependían de ellos (parte de A4, A7 y P6) aplican solo a lo que queda.
+- En `/servicios` y el detalle no existe StarField, así que nunca llega `scene:ready` y el preloader
+  espera los 4,5 s del timeout. Por eso sale en consola «Preloader timeout reached». Corrígelo:
+  que esas páginas marquen la escena lista de inmediato.
 - Conserva la «Misión de despegue»: los 7 capítulos, el HUD, el cielo estrellado, la órbita, el
   viaje horizontal de casos y el aterrizaje. Si un hallazgo exige quitar una pieza de la narrativa,
   pregúntame antes.
