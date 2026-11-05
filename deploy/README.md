@@ -54,3 +54,11 @@ Variable opcional `APP_PORT` si 4321 está ocupado (y cambia el `proxy_pass` en 
 
 Push a `main` o *Actions → Deploy a VPS → Run workflow*.
 Logs: `docker logs -f grupocrear`.
+
+## Caché y cabeceras de seguridad
+
+`server.mjs` añade las cabeceras de seguridad y la caché; no hace falta tocar nginx.
+
+- **Caché de un año en imágenes, vídeos y fuentes.** Si reemplazas uno de esos archivos, **cámbiale el nombre**: quien ya visitó el sitio seguiría viendo el anterior. Lo mismo con `public/nyo-credit.js`.
+- **CSP con hashes.** Se calculan solos al arrancar, a partir de los scripts en línea del build. Si una página carga algo de otro dominio, hay que añadirlo en `SECURITY_HEADERS` (hoy solo `res.cloudinary.com` para imágenes).
+- **HSTS en primera etapa (7 días).** Cuando lleve un tiempo estable, subir `max-age` a `31536000`. Añade `includeSubDomains` y `preload` solo después de confirmar que todos los subdominios de `grupocrear.co` funcionan con HTTPS: son difíciles de revertir.

@@ -17,6 +17,8 @@ import node from '@astrojs/node';
 export default defineConfig({
   adapter: node({ mode: 'standalone' }),
   devToolbar: { enabled: false },
+  // El CSS en el HTML evita una petición que bloquea el primer pintado
+  build: { inlineStylesheets: 'always' },
 
   vite: {
     plugins: [tailwindcss()],

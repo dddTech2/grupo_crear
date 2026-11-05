@@ -7,7 +7,8 @@
  * nginx deja pasar las respuestas que ya traen Content-Encoding.
  */
 import http from 'node:http';
-import { readdirSync, readFileSync } from 'node:fs';
+import { createHash } from 'node:crypto';
+import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { brotliCompressSync, gzipSync } from 'node:zlib';
 
 process.env.ASTRO_NODE_AUTOSTART = 'disabled';
@@ -15,12 +16,13 @@ const { handler } = await import('./dist/server/entry.mjs');
 
 const TYPES = { js: 'text/javascript; charset=utf-8', css: 'text/css; charset=utf-8' };
 const IMMUTABLE = 'public, max-age=31536000, immutable'; // nombres con hash: nunca cambian
-const MEDIA_CACHE = 'public, max-age=604800';            // nombres fijos: una semana
+const MEDIA_CACHE = 'public, max-age=31536000';          // nombres fijos: un año. Si cambias un archivo, cámbiale el nombre
 const MEDIA = /\.(webp|png|jpe?g|svg|ico|mp4|webm|woff2)$/i;
 
 const assets = new Map();
 for (const dir of ['_astro', 'assets']) {
   const base = new URL(`./dist/client/${dir}/`, import.meta.url);
+  if (!existsSync(base)) continue; // con el CSS en línea, assets/ puede no existir
   for (const name of readdirSync(base)) {
     const type = TYPES[name.split('.').pop()];
     if (!type) continue;
@@ -33,7 +35,35 @@ for (const dir of ['_astro', 'assets']) {
 const credit = readFileSync(new URL('./dist/client/nyo-credit.js', import.meta.url));
 assets.set('/nyo-credit.js', { type: TYPES.js, raw: credit, br: brotliCompressSync(credit), gzip: gzipSync(credit, { level: 9 }), cache: MEDIA_CACHE });
 
+// CSP con el hash de cada script en línea de las páginas prerenderizadas: sin 'unsafe-inline' en scripts.
+// Los estilos sí lo necesitan por los atributos style="" del marcado.
+const inlineHashes = new Set();
+for (const entry of readdirSync(new URL('./dist/client/', import.meta.url), { recursive: true })) {
+  if (!entry.endsWith('.html')) continue;
+  const html = readFileSync(new URL(`./dist/client/${entry.replaceAll('\\', '/')}`, import.meta.url), 'utf8');
+  for (const [, code] of html.matchAll(/<script(?![^>]*\ssrc=)[^>]*>([\s\S]*?)<\/script>/g)) {
+    inlineHashes.add(`'sha256-${createHash('sha256').update(code).digest('base64')}'`);
+  }
+}
+const SECURITY_HEADERS = {
+  'Content-Security-Policy': [
+    "default-src 'self'",
+    `script-src 'self' ${[...inlineHashes].join(' ')}`,
+    "style-src 'self' 'unsafe-inline'",
+    "img-src 'self' data: https://res.cloudinary.com",
+    "object-src 'none'",
+    "base-uri 'self'",
+    "form-action 'self'",
+    "frame-ancestors 'self'",
+  ].join('; '),
+  'Cross-Origin-Opener-Policy': 'same-origin',
+  'Strict-Transport-Security': 'max-age=604800', // primera etapa: subir a 1 año cuando lleve un tiempo estable
+  'X-Content-Type-Options': 'nosniff',
+  'X-Frame-Options': 'SAMEORIGIN',
+};
+
 const server = http.createServer((req, res) => {
+  for (const [name, value] of Object.entries(SECURITY_HEADERS)) res.setHeader(name, value);
   const path = (req.url ?? '/').split('?')[0];
   const asset = (req.method === 'GET' || req.method === 'HEAD') && assets.get(path);
 

@@ -653,8 +653,9 @@ const pasos = s.pasos;
       });
     const reto = document.querySelector<HTMLElement>('.reto-txt');
     if (reto) {
+      // Sin encender siguen siendo legibles: 3:1 como texto grande (el acento necesita más opacidad)
       gsap.fromTo(splitWords(reto),
-        { opacity: .14 },
+        { opacity: (_: number, w: HTMLElement) => (w.closest('em') ? .8 : .5) },
         {
           opacity: 1, ease: 'none', stagger: .06,
           scrollTrigger: { trigger: reto, start: 'top 82%', end: 'bottom 55%', scrub: .5 },

@@ -3,31 +3,21 @@ import Header from '../components/Header.astro';
 import ChatWidget from '../components/ChatWidget.astro';
 import { waBase } from '../data/contacto';
 import '../styles/global.css';
-import { readFileSync } from 'node:fs';
-import { resolve }      from 'node:path';
 
 export interface Props {
   title?: string;
   description?: string;
-  showPreloader?: boolean;
   /** Slot "intro" acepta <LogoIntro /> solo en páginas que lo requieran */
 }
 const {
   title       = 'Grupo Crear — Agencia de Publicidad',
   description = 'Agencia de publicidad y soluciones gráficas. Impresión gran formato, material POP, branding y diseño web en Colombia.',
-  showPreloader = false,
 } = Astro.props;
 
-let logoPathsHTML = '';
-try {
-  const svgRaw  = readFileSync(resolve('public/logo-Grupo-Crear-vector_sintext.svg'), 'utf-8');
-  const matches = [...svgRaw.matchAll(/<path\s+class="b"[^>]*\/>/g)];
-  logoPathsHTML = matches.map(m => m[0].replace(/\s*class="[^"]*"/g, '')).join('\n');
-} catch (_) {}
 ---
 
 <!doctype html>
-<html lang="es" class={showPreloader ? 'loading' : ''}>
+<html lang="es">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -50,9 +40,9 @@ try {
   <link rel="preload" href="/fonts/sofia-sans.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="preload" href="/fonts/sofia-sans-condensed.woff2" as="font" type="font/woff2" crossorigin />
   <style is:inline>
-    @font-face{font-family:'Sofia Sans';font-style:normal;font-weight:1 1000;font-display:swap;src:url(/fonts/sofia-sans.woff2) format('woff2')}
+    @font-face{font-family:'Sofia Sans';font-style:normal;font-weight:400 900;font-display:swap;src:url(/fonts/sofia-sans.woff2) format('woff2')}
     @font-face{font-family:'Sofia Sans';font-style:italic;font-weight:1 1000;font-display:swap;src:url(/fonts/sofia-sans-italic.woff2) format('woff2')}
-    @font-face{font-family:'Sofia Sans Condensed';font-style:normal;font-weight:1 1000;font-display:swap;src:url(/fonts/sofia-sans-condensed.woff2) format('woff2')}
+    @font-face{font-family:'Sofia Sans Condensed';font-style:normal;font-weight:400 900;font-display:swap;src:url(/fonts/sofia-sans-condensed.woff2) format('woff2')}
   </style>
 
   <slot name="head" />
@@ -63,8 +53,8 @@ try {
     window.__domReady = false;
     
     // Temporizador de respaldo para evitar bloqueos
-    window.__preloaderTimeout = setTimeout(() => {
-      console.warn("Preloader timeout reached. Forcing load state.");
+    window.__bootTimeout = setTimeout(() => {
+      console.warn("Boot timeout reached. Forcing load state.");
       window.__sceneReady = true;
       window.__domReady = true;
       if (window.__checkAllLoaded) window.__checkAllLoaded();
@@ -109,12 +99,11 @@ try {
     /* En móvil, el halo del trazo del logo y el pulso del brillo cuestan más de lo que aportan */
     @media (max-width:768px){
       #glow-bg{animation:none}
-      #preloader g[filter],#logo-stroke-group g[filter]{filter:none}
+      #logo-stroke-group g[filter]{filter:none}
       #scroll-indicator{display:none} /* se monta sobre el tagline */
     }
     ::selection{background:var(--n);color:#fff}
     html{scroll-behavior:auto;scrollbar-gutter:stable}
-    html.loading{overflow:hidden}
     body{font-family:'Sofia Sans',sans-serif;background:var(--bg);color:var(--w);overflow-x:hidden;-webkit-font-smoothing:antialiased;line-height:1.5}
     .cond{font-family:'Sofia Sans Condensed','Sofia Sans',sans-serif}
 
@@ -149,10 +138,10 @@ try {
     @media(max-width:980px){#flight{display:none}}
 
     /* NAV */
-    #nav{position:fixed;inset:0 0 auto 0;z-index:300;height:84px;display:flex;align-items:center;justify-content:space-between;padding:0 clamp(20px,5vw,64px);transition:height .5s var(--ease),background .5s var(--ease),border-color .5s var(--ease),opacity .5s var(--ease);border-bottom:1px solid transparent;opacity:0;pointer-events:none}
-    html:not(.loading) #nav,
-    html:not(.loading) #nav .menu li,
-    html:not(.loading) #burger{opacity:1!important;pointer-events:auto!important;transform:none!important}
+    #nav{position:fixed;inset:0 0 auto 0;z-index:300;height:84px;display:flex;align-items:center;justify-content:space-between;padding:0 clamp(20px,5vw,64px);transition:height .5s var(--ease),background .5s var(--ease),border-color .5s var(--ease),opacity .5s var(--ease);border-bottom:1px solid transparent}
+    #nav,
+    #nav .menu li,
+    #burger{opacity:1!important;pointer-events:auto!important;transform:none!important}
     #nav.s{height:64px;background:rgba(0,16,42,.72);backdrop-filter:blur(24px) saturate(160%);border-bottom:1px solid var(--w06)}
     .brand{display:flex;align-items:center;text-decoration:none;color:#fff;line-height:0}
     .brand:hover #logoWrap{transform:scale(1.03)}
@@ -225,7 +214,7 @@ try {
     .marquee{border-top:1px solid var(--w06);border-bottom:1px solid var(--w06);padding:26px 0;overflow:hidden;background:var(--bg)}
     .mq-track{display:flex;gap:64px;width:max-content;animation:scroll 28s linear infinite;align-items:center}
     .marquee:hover .mq-track,.marquee.off .mq-track{animation-play-state:paused}
-    .mq-track span{font-family:'Sofia Sans Condensed';font-size:30px;font-weight:700;color:rgba(255,255,255,.22);letter-spacing:-.02em;text-transform:uppercase;white-space:nowrap;transition:color .3s}
+    .mq-track span{font-family:'Sofia Sans Condensed';font-size:30px;font-weight:700;color:rgba(255,255,255,.4);letter-spacing:-.02em;text-transform:uppercase;white-space:nowrap;transition:color .3s}
     .mq-track span:hover{color:var(--n)}
     .mq-track .sep{width:7px;height:7px;border-radius:50%;background:var(--n);flex-shrink:0}
     @keyframes scroll{to{transform:translateX(-50%)}}
@@ -235,8 +224,8 @@ try {
     .wrap{max-width:1240px;margin:0 auto}
     /* Pulso del punto del HUD de misión */
     @keyframes idx-pulse{
-      0%,100%{box-shadow:0 0 0 0 rgba(232,78,27,.5)}
-      55%    {box-shadow:0 0 0 5px rgba(232,78,27,0)}
+      0%     {transform:scale(1);opacity:.5}
+      55%,100%{transform:scale(2.7);opacity:0}
     }
     .lead{font-family:'Sofia Sans Condensed';font-weight:900;font-size:clamp(38px,6.5vw,86px);line-height:.92;letter-spacing:-.035em;text-transform:uppercase}
     .lead em{font-style:normal;color:var(--n)}
@@ -277,7 +266,8 @@ try {
     #mission-hud{position:fixed;left:clamp(14px,2.4vw,34px);bottom:clamp(14px,2.6vh,24px);z-index:250;display:flex;align-items:center;gap:12px;padding:9px 16px 9px 12px;border-radius:100px;background:rgba(0,16,42,.88);border:1px solid var(--w12);font-family:'Sofia Sans Condensed',sans-serif;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--w60);pointer-events:none;opacity:0;transform:translateY(10px);transition:opacity .5s var(--ease),transform .5s var(--ease)}
     #mission-hud.on{opacity:1;transform:none}
     #mission-hud.on.off{opacity:0;transform:translateY(10px)}
-    #mission-hud .hud-dot{width:6px;height:6px;border-radius:50%;background:var(--n);animation:idx-pulse 2.8s ease-in-out infinite}
+    #mission-hud .hud-dot{position:relative;width:6px;height:6px;border-radius:50%;background:var(--n)}
+    #mission-hud .hud-dot::after{content:'';position:absolute;inset:0;border-radius:50%;background:var(--n);animation:idx-pulse 2.8s ease-in-out infinite}
     #mission-hud b{color:#fff;font-weight:700}
     #mission-hud .hud-name{color:#fff;min-width:8.5em}
     #mission-hud .hud-sep{width:1px;height:12px;background:var(--w12)}
@@ -341,7 +331,7 @@ try {
     .f5{background:linear-gradient(135deg,#b53c12,#3a1306)}
     .proj .ptag{display:inline-flex;align-items:center;gap:8px;font-family:'Sofia Sans Condensed';font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--n);margin-bottom:14px}
     .proj .ptag b{width:5px;height:5px;border-radius:50%;background:var(--n)}
-    .proj h4{font-family:'Sofia Sans Condensed';font-size:clamp(20px,2vw,30px);font-weight:800;line-height:1;letter-spacing:-.02em;text-transform:uppercase}
+    .proj h3{font-family:'Sofia Sans Condensed';font-size:clamp(20px,2vw,30px);font-weight:800;line-height:1;letter-spacing:-.02em;text-transform:uppercase}
     .proj .pmeta{margin-top:10px;font-size:13px;color:var(--w60)}
     .proj .arrow{position:absolute;top:26px;right:26px;width:44px;height:44px;border:1px solid var(--w12);border-radius:50%;display:flex;align-items:center;justify-content:center;transition:.4s var(--ease);opacity:0;transform:translate(-6px,6px)}
     .proj:hover .arrow{opacity:1;transform:none;border-color:var(--n);background:var(--n)}
@@ -360,7 +350,7 @@ try {
     .seo-c:hover{background:var(--bg2)}
     .seo-ic{width:46px;height:46px;display:flex;align-items:center;justify-content:center;margin-bottom:22px}
     .seo-ic svg{width:30px;height:30px;stroke:var(--n);fill:none;stroke-width:1.3;stroke-linecap:round;stroke-linejoin:round}
-    .seo-c h5{font-family:'Sofia Sans Condensed';font-size:21px;font-weight:800;letter-spacing:-.01em;text-transform:uppercase;margin-bottom:10px}
+    .seo-c h3{font-family:'Sofia Sans Condensed';font-size:21px;font-weight:800;letter-spacing:-.01em;text-transform:uppercase;margin-bottom:10px}
     .seo-c p{font-size:13.5px;color:var(--w60);line-height:1.6}
     .seo-c code{display:inline-block;margin-top:12px;font-family:monospace;font-size:12px;color:var(--n);background:rgba(232,78,27,.08);border:1px solid rgba(232,78,27,.2);padding:4px 9px;border-radius:4px}
 
@@ -439,45 +429,6 @@ try {
 </head>
 <body class="has-rocket-cursor">
 
-  <!-- Pantalla de carga opaca (Preloader) con el logo estático en contorno -->
-  {showPreloader && (
-    <div
-      id="preloader"
-      aria-label="Cargando"
-      style="position:fixed;inset:0;background:radial-gradient(circle at 50% 0%, #002255 0%, #001433 75%);z-index:99999999;opacity:1;pointer-events:auto;overflow:hidden;"
-    >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        style="position:absolute;inset:0;width:100%;height:100%;display:block;overflow:hidden;"
-        aria-hidden="true"
-      >
-        <defs>
-          <filter id="preloader-stroke-glow" x="-20%" y="-20%" width="140%" height="140%">
-            <feGaussianBlur in="SourceGraphic" stdDeviation="2" result="blur"/>
-            <feMerge>
-              <feMergeNode in="blur"/>
-              <feMergeNode in="SourceGraphic"/>
-            </feMerge>
-          </filter>
-        </defs>
-
-        <g>
-          <svg
-            viewBox="0 0 1199 680"
-            preserveAspectRatio="xMidYMid meet"
-            x="5%" y="10%"
-            width="90%" height="80%"
-          >
-            <g fill="none" stroke="#E84E1B" stroke-width="1.8"
-               stroke-linejoin="round" stroke-linecap="round"
-               filter="url(#preloader-stroke-glow)" opacity="0.85">
-              <Fragment set:html={logoPathsHTML} />
-            </g>
-          </svg>
-        </g>
-      </svg>
-    </div>
-  )}
 
   <!-- Grano analógico -->
   <div class="grain" aria-hidden="true"></div>
@@ -736,26 +687,20 @@ try {
     }
   </script>
 
-  <!-- Script de validación final para ocultar preloader -->
+  <!-- Arranque: avisa cuando el DOM y la escena están listos -->
   <script is:inline>
     window.__checkAllLoaded = function() {
       if (window.__domReady && window.__sceneReady && !window.__loadFired) {
         window.__loadFired = true;
-        if (window.__preloaderTimeout) clearTimeout(window.__preloaderTimeout);
+        if (window.__bootTimeout) clearTimeout(window.__bootTimeout);
         window.dispatchEvent(new CustomEvent('load:complete'));
-        if (!document.getElementById('preloader') && !document.getElementById('intro-mask')) {
-          document.documentElement.classList.remove('loading');
-        }
       }
     };
     // Ejecutar inmediatamente por si ya se cargaron los eventos
     window.__checkAllLoaded();
 
-    // Si la página no incluye preloader o máscara de entrada (páginas secundarias como /servicios), remover 'loading' inmediatamente
-    if (!document.getElementById('preloader') && !document.getElementById('intro-mask')) {
-      if (window.__preloaderTimeout) clearTimeout(window.__preloaderTimeout);
-      document.documentElement.classList.remove('loading');
-    }
+    // Las páginas sin portada animada (como /servicios) no esperan a la escena
+    if (!document.getElementById('hero-visual') && window.__bootTimeout) clearTimeout(window.__bootTimeout);
   </script>
 </body>
 </html>

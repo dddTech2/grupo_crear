@@ -14,13 +14,11 @@ import { contacto, waBase, telLink, mailtoLink } from '../data/contacto';
 <Layout
   title="Grupo Crear — Agencia de Publicidad · Bogotá, Colombia"
   description="Agencia de publicidad y soluciones gráficas. Impresión gran formato, material POP, branding y diseño web en Colombia."
-  showPreloader={true}
 >
 
 
   <!-- El primer pintado grande de la portada: que no espere a que el navegador lo descubra -->
   <link slot="head" rel="preload" as="image" href="/posters/meteoro.webp" fetchpriority="high" />
-  <link slot="head" rel="preload" as="image" href="/media/rebranding-nexus-640.webp" fetchpriority="high" />
 
   <RocketCursor slot="cursor" />
 
@@ -60,13 +58,13 @@ import { contacto, waBase, telLink, mailtoLink } from '../data/contacto';
       <!-- Tarjeta 1: Rebranding Nexus -->
       <div class="card-parallax absolute top-[20%] right-[18%] w-72 rounded-xl overflow-hidden shadow-2xl opacity-100"
            data-speed="-1.5" data-x="450" data-y="-350" data-rx="-25" data-ry="30" data-sk="-8">
-        <img src="/media/rebranding-nexus-640.webp" width="640" height="357" fetchpriority="high" decoding="async" alt="Rebranding Nexus" class="w-full h-auto" />
+        <img src="/media/rebranding-nexus-640.webp" srcset="/media/rebranding-nexus-320.webp 320w, /media/rebranding-nexus-640.webp 640w" sizes="(max-width: 768px) 44vw, 288px" width="640" height="357" decoding="async" alt="Rebranding Nexus" class="w-full h-auto" />
       </div>
 
       <!-- Tarjeta 2: Vista Mac -->
       <div class="card-parallax absolute bottom-[22%] right-[16%] w-36 rounded-xl overflow-hidden shadow-2xl opacity-100"
            data-speed="2.2" data-x="500" data-y="300" data-rx="25" data-ry="25" data-sk="8">
-        <video autoplay loop muted playsinline poster="/posters/diseno-web.webp" width="270" height="480" class="w-full h-auto" aria-hidden="true">
+        <video autoplay loop muted playsinline poster="/posters/diseno-web-collage.webp" width="252" height="448" class="w-full h-auto" aria-hidden="true">
           <source data-src="/VistaMacCinematica_3.mp4" type="video/mp4" />
         </video>
       </div>
@@ -74,13 +72,13 @@ import { contacto, waBase, telLink, mailtoLink } from '../data/contacto';
       <!-- Tarjeta 3: Exposición en el Museo de Memoria de Colombia -->
       <div class="card-parallax absolute bottom-[16%] left-[14%] w-80 rounded-xl overflow-hidden shadow-2xl opacity-100"
            data-speed="-1" data-x="-500" data-y="400" data-rx="30" data-ry="-25" data-sk="-8">
-        <img src="/media/exhibicion-museo-memoria-640.webp" width="640" height="427" decoding="async" alt="Exposición en gran formato en el Museo de Memoria de Colombia" class="w-full h-auto" />
+        <img src="/media/exhibicion-museo-memoria-640.webp" srcset="/media/exhibicion-museo-memoria-320.webp 320w, /media/exhibicion-museo-memoria-640.webp 640w" sizes="(max-width: 768px) 44vw, 320px" width="640" height="427" decoding="async" alt="Exposición en gran formato en el Museo de Memoria de Colombia" class="w-full h-auto" />
       </div>
 
       <!-- Tarjeta 4: Gran Formato -->
       <div class="card-parallax absolute top-[22%] left-[6%] w-64 rounded-xl overflow-hidden shadow-2xl opacity-100"
            data-speed="1.2" data-x="-450" data-y="-300" data-rx="-25" data-ry="-30" data-sk="8">
-        <video autoplay loop muted playsinline poster="/posters/gran-formato.webp" width="480" height="270" class="w-full h-auto" aria-hidden="true">
+        <video autoplay loop muted playsinline poster="/posters/gran-formato-320.webp" width="320" height="180" class="w-full h-auto" aria-hidden="true">
           <source data-src="/Impresion-a-gran-formato_naranja_3.mp4" type="video/mp4" />
         </video>
       </div>
@@ -88,7 +86,7 @@ import { contacto, waBase, telLink, mailtoLink } from '../data/contacto';
       <!-- Tarjeta 5: Alternativa Naranja 3D -->
       <div class="card-parallax absolute top-[38%] left-[29%] w-44 h-44 rounded-full overflow-hidden shadow-2xl opacity-100"
            data-speed="-0.8" data-x="-600" data-y="-50" data-rx="-20" data-ry="-20" data-sk="4">
-        <img src="/media/alternativa-naranja-3d-640.webp" width="640" height="360" decoding="async" alt="Alternativa Naranja 3D" class="w-full h-full object-cover" />
+        <img src="/media/alternativa-naranja-3d-640.webp" srcset="/media/alternativa-naranja-3d-360.webp 360w, /media/alternativa-naranja-3d-640.webp 640w" sizes="(max-width: 768px) 49vw, 313px" width="640" height="360" decoding="async" alt="Alternativa Naranja 3D" class="w-full h-full object-cover" />
       </div>
     </div>
 
@@ -100,8 +98,8 @@ import { contacto, waBase, telLink, mailtoLink } from '../data/contacto';
       <p> sin aria-hidden: Google lo indexa como texto descriptivo de servicio.
       No compite con el <h1> del segundo fold ("Hacemos que tu marca haga ruido").
       z-index:35 → encima del LogoHeroMask (z-20) y del scroll-indicator (z-30).
-      Visible desde el primer pintado (el preloader lo tapa mientras carga);
-      GSAP controla BOTH entrada (por palabras) y salida (fade-up al scroll).
+      Visible desde el primer pintado, con un fundido solo de CSS que no depende del JS;
+      GSAP controla la salida (fade-up al scroll).
     -->
     <p
       id="hero-visual-tagline"
@@ -341,7 +339,7 @@ import { contacto, waBase, telLink, mailtoLink } from '../data/contacto';
             <svg viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H8M17 7v9"/></svg>
           </div>
           <div class="ptag"><b></b>Rebranding</div>
-          <h4>Nexus — Identidad Completa</h4>
+          <h3>Nexus — Identidad Completa</h3>
           <div class="pmeta">Pyme Servicios · Bogotá · 2024</div>
         </a>
 
@@ -354,7 +352,7 @@ import { contacto, waBase, telLink, mailtoLink } from '../data/contacto';
             <svg viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H8M17 7v9"/></svg>
           </div>
           <div class="ptag"><b></b>Gran Formato</div>
-          <h4>Impresión Gran Escala</h4>
+          <h3>Impresión Gran Escala</h3>
           <div class="pmeta">Retail · 2024</div>
         </a>
 
@@ -367,7 +365,7 @@ import { contacto, waBase, telLink, mailtoLink } from '../data/contacto';
             <svg viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H8M17 7v9"/></svg>
           </div>
           <div class="ptag"><b></b>Modelado 3D</div>
-          <h4>Concepto Visual 3D</h4>
+          <h3>Concepto Visual 3D</h3>
           <div class="pmeta">Campaña Digital · 2024</div>
         </a>
 
@@ -380,7 +378,7 @@ import { contacto, waBase, telLink, mailtoLink } from '../data/contacto';
             <svg viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H8M17 7v9"/></svg>
           </div>
           <div class="ptag"><b></b>Gran Formato</div>
-          <h4>Museo de Memoria de Colombia</h4>
+          <h3>Museo de Memoria de Colombia</h3>
           <div class="pmeta">Módulos y paneles de exposición · Bogotá</div>
         </a>
 
@@ -391,7 +389,7 @@ import { contacto, waBase, telLink, mailtoLink } from '../data/contacto';
             <svg viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H8M17 7v9"/></svg>
           </div>
           <div class="ptag"><b></b>Diseño Web</div>
-          <h4>Sitio B2B + SEO</h4>
+          <h3>Sitio B2B + SEO</h3>
           <div class="pmeta">×3 tráfico orgánico · 2024</div>
         </a>
       </div>
@@ -414,14 +412,14 @@ import { contacto, waBase, telLink, mailtoLink } from '../data/contacto';
           <div class="seo-ic" aria-hidden="true">
             <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
           </div>
-          <h5>Keyword Mapping</h5>
+          <h3>Keyword Mapping</h3>
           <p>Palabras transaccionales de alto valor mapeadas por servicio e intención de búsqueda.</p>
         </div>
         <div class="seo-c r" data-d="2">
           <div class="seo-ic" aria-hidden="true">
             <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg>
           </div>
-          <h5>Estructura URL</h5>
+          <h3>Estructura URL</h3>
           <p>Rutas amigables y semánticas para usuarios y robots.</p>
           <code>/servicios/material-pop</code>
         </div>
@@ -429,14 +427,14 @@ import { contacto, waBase, telLink, mailtoLink } from '../data/contacto';
           <div class="seo-ic" aria-hidden="true">
             <svg viewBox="0 0 24 24"><path d="M4 19V5M4 19h16M8 19v-7M13 19V9M18 19v-4"/></svg>
           </div>
-          <h5>Jerarquía H1/H2</h5>
+          <h3>Jerarquía H1/H2</h3>
           <p>Encabezados estructurados para que Google lea la prioridad exacta de cada página.</p>
         </div>
         <div class="seo-c r" data-d="4">
           <div class="seo-ic" aria-hidden="true">
             <svg viewBox="0 0 24 24"><path d="M13 2L4.5 13H11l-1 9 8.5-11H12l1-9z"/></svg>
           </div>
-          <h5>WPO Total</h5>
+          <h3>WPO Total</h3>
           <p>Carga diferida y optimización técnica. Menos de 3 segundos en móvil, garantizado.</p>
         </div>
       </div>
@@ -546,8 +544,8 @@ import { contacto, waBase, telLink, mailtoLink } from '../data/contacto';
    * Llama a `run` una sola vez: con la primera señal del usuario o, si se indica, pasados `ms`.
    * Lo costoso del hero se monta así, para que la portada pinte y responda antes.
    */
-  function onFirstEngagement(run: () => void, ms?: number) {
-    const EVENTS = ['wheel', 'touchstart', 'pointerdown', 'keydown', 'scroll'];
+  function onFirstEngagement(run: () => void, ms?: number, extraEvents: string[] = []) {
+    const EVENTS = ['wheel', 'touchstart', 'pointerdown', 'keydown', 'scroll', ...extraEvents];
     let timer: ReturnType<typeof setTimeout> | undefined;
     const fire = () => {
       EVENTS.forEach((e) => window.removeEventListener(e, fire));
@@ -565,9 +563,6 @@ import { contacto, waBase, telLink, mailtoLink } from '../data/contacto';
   // • scrub:1.8 en meteoro = más "masa" que las tarjetas (≈ rotationLerp:0.26)
   // • ease-expo en textos = cubic-bezier(.16,1,.3,1) idéntico a Podium
   window.addEventListener('load:complete', () => {
-    const preloader   = document.getElementById('preloader');
-    const nav         = document.getElementById('nav');
-    const navElements = document.querySelectorAll('#nav-brand, #nav .menu li, #burger');
     const taglineEl   = document.getElementById('hero-visual-tagline');
 
     // Declarado aquí (no dentro de `if (taglineEl)`) porque initScrollSystem()
@@ -577,7 +572,7 @@ import { contacto, waBase, telLink, mailtoLink } from '../data/contacto';
 
     // ── Vídeos del hero: pósters al entrar y vídeo cuando hace falta ─────────
     // Pesan 3 MB y detrás de la máscara casi no se ven hasta hacer scroll. En móvil
-    // o con ahorro de datos esperan al primer gesto; en escritorio, a 2,5 s.
+    // o con ahorro de datos esperan al primer gesto; en escritorio, además, a mover el ratón.
     const loadHeroVideos = () => {
       document.querySelectorAll<HTMLSourceElement>('#hero-visual source[data-src]').forEach((s) => {
         const v = s.parentElement as HTMLVideoElement | null;
@@ -586,57 +581,29 @@ import { contacto, waBase, telLink, mailtoLink } from '../data/contacto';
       });
     };
     const lightDevice = window.matchMedia('(max-width: 768px)').matches || (navigator as any).connection?.saveData;
-    onFirstEngagement(loadHeroVideos, lightDevice ? undefined : 2500);
-
-    if (nav) {
-      gsap.set(nav, { opacity: 1 });
-      nav.style.pointerEvents = 'auto'; // Habilitar clics
-    }
+    onFirstEngagement(loadHeroVideos, undefined, lightDevice ? [] : ['pointermove']);
 
     // ── Timeline de entrada ─────────────────────────────────────────────────
-    // La escena ya está pintada debajo del preloader (collage, máscara y tagline),
-    // así que esto solo la destapa y le da vida: corto para no retener a nadie.
+    // La escena ya está pintada desde el primer fotograma (collage, máscara, nav y
+    // tagline): esto solo enciende lo que no puede esperar a un gesto.
     const introTl = gsap.timeline({
       onComplete: () => window.dispatchEvent(new CustomEvent('intro:complete')),
     });
 
-    // 1. Desvanecer el preloader (Capa 1)
-    if (preloader) {
-      introTl.to(preloader, {
-        opacity: 0,
-        duration: 0.5,
-        ease: 'power2.out',
-        onComplete: () => { preloader.style.display = 'none'; },
-      }, 0);
-    }
-    // Tras la entrada del nav: al quitar .loading su estado final se fuerza con !important
-    introTl.call(() => document.documentElement.classList.remove('loading'), undefined, 0.85);
-
-    // 2. Encendido progresivo del cielo estrellado (StarField)
+    // 1. Encendido progresivo del cielo estrellado (StarField)
     const stars = (window as any).__stars;
     if (stars && !prefersRM) {
       introTl.to(stars, { alpha: 0.55, duration: 1.6, ease: 'expo.out' }, 0.2);
     }
 
-    // 3. Stagger en cascada para los elementos de navegación (Slide down + Fade-in)
-    if (navElements.length) {
-      introTl.fromTo(navElements,
-        { opacity: 0, y: -25 },
-        { opacity: 1, y: 0, duration: 0.5, ease: 'expo.out', stagger: 0.03 },
-        0.1
-      );
-    }
-
-    // 4. Meteoro y scroll indicator (Slide up + Fade-in)
-    introTl.fromTo('#meteor-container', { y: 35 }, { y: 0, duration: 1.0, ease: 'expo.out' }, 0.15);
+    // 2. Scroll indicator (Slide up + Fade-in)
     introTl.fromTo('#scroll-indicator',
       { opacity: 0, y: 35 },
       { opacity: 1, y: 0, duration: 1.0, ease: 'expo.out' },
       0.25
     );
 
-    // 5. Tagline palabra por palabra
-    //
+    // Tagline partido por palabras para su salida con scroll.
     // Por palabras y no por letras: 14 tweens en lugar de 84 y ningún aria-hidden,
     // porque cada palabra sigue siendo texto normal para lectores de pantalla.
     function splitTaglineWords(el: HTMLElement): HTMLElement[] {
@@ -656,20 +623,6 @@ import { contacto, waBase, telLink, mailtoLink } from '../data/contacto';
         if (li < lines.length - 1) el.appendChild(document.createElement('br'));
       });
       return words;
-    }
-
-    if (taglineEl && !prefersRM) {
-      introTl.fromTo(splitTaglineWords(taglineEl),
-        { opacity: 0, y: 6 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 0.7,
-          ease: 'power3.out',
-          stagger: { each: 0.04, from: 'random' },
-        },
-        0.2
-      );
     }
 
     // ── Sistema de scroll ───────────────────────────────────────────────────
@@ -908,6 +861,7 @@ import { contacto, waBase, telLink, mailtoLink } from '../data/contacto';
         stagger from:'random' → intercalado natural dentro del scrub del tl.      ✅
         each:0.02 × 14 palabras + duration:0.22 ≈ 0.5 tl-time (25% del scroll).  ✅
       */
+      if (taglineEl && !prefersRM) splitTaglineWords(taglineEl);
       const tChars = document.querySelectorAll<HTMLElement>('#hero-visual-tagline .tword');
       if (tChars.length && !prefersRM) {
         tl.fromTo(tChars,
@@ -1045,6 +999,17 @@ import { contacto, waBase, telLink, mailtoLink } from '../data/contacto';
 </script>
 
 <style>
+  /* Entrada del tagline solo con CSS: arranca con el primer pintado, sin esperar al JS */
+  @keyframes tagline-in {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    #hero-visual-tagline {
+      animation: tagline-in .6s var(--ease-expo) both;
+    }
+  }
+
   /* Ocultar elementos del hero por defecto para evitar FOUC */
   #scroll-indicator {
     opacity: 0;
