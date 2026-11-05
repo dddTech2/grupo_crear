@@ -1,0 +1,119 @@
+---
+/*
+  CierreCTA — clímax de las páginas de servicio, en naranja sólido.
+
+  Es el único bloque de color pleno de la página: el salto desde el azul marca
+  el momento de actuar. Texto en tinta sobre naranja (4,98:1), botón principal
+  en tinta y secundario en contorno, para que no compitan entre sí.
+*/
+interface Props {
+  waHref: string;
+}
+const { waHref } = Astro.props;
+---
+
+<section id="cierre" class="cierre" data-chapter="Aterrizaje" data-tone="accent" aria-labelledby="cierre-title">
+  <div class="cto-huge" aria-hidden="true">Crear</div>
+  <div class="wrap cierre-in">
+    <h2 class="cierre-t" id="cierre-title">Cuéntanos qué<br />necesitas.</h2>
+    <div class="cierre-side">
+      <p class="cierre-p">Respondemos en menos de 24 horas con una propuesta concreta y sin compromiso.</p>
+      <div class="cierre-acts">
+        <a href={waHref} class="btn-ink" target="_blank" rel="noopener noreferrer">
+          Escribir por WhatsApp
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path d="M5 12h14M13 6l6 6-6 6" />
+          </svg>
+        </a>
+        <button type="button" class="btn-ink-line" data-open-contact>Pedir cotización formal</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style is:global>
+  .cierre {
+    position: relative;
+    overflow: hidden;
+    background: var(--n);
+    color: var(--ink);
+    padding: clamp(96px, 13vw, 190px) clamp(20px, 5vw, 64px);
+  }
+  .cierre .cto-huge {
+    -webkit-text-stroke-color: rgba(4, 16, 42, .16);
+  }
+  .cierre-in {
+    display: grid;
+    grid-template-columns: 1.25fr 1fr;
+    gap: clamp(32px, 6vw, 96px);
+    align-items: end;
+  }
+  .cierre-t {
+    font-family: 'Sofia Sans Condensed', sans-serif;
+    font-weight: 900;
+    font-size: clamp(50px, 6.8vw, 108px);
+    line-height: .88;
+    letter-spacing: -.04em;
+    text-transform: uppercase;
+    color: var(--ink);
+  }
+  .cierre-p {
+    font-size: clamp(17px, 1.5vw, 20px);
+    font-weight: 500;
+    line-height: 1.5;
+    color: var(--ink);
+    max-width: 420px;
+    margin-bottom: 28px;
+  }
+  .cierre-acts { display: flex; flex-wrap: wrap; gap: 14px; }
+  .btn-ink,
+  .btn-ink-line {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    min-height: 54px;
+    padding: 0 28px;
+    border-radius: 100px;
+    font-family: 'Sofia Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    text-decoration: none;
+    transition: background .25s, color .25s, border-color .25s;
+  }
+  .btn-ink { background: var(--ink); color: #fff; border: 2px solid var(--ink); }
+  .btn-ink svg { width: 16px; height: 16px; transition: transform .25s; }
+  .btn-ink:hover { background: #fff; color: var(--ink); border-color: #fff; }
+  .btn-ink:hover svg { transform: translateX(4px); }
+  .btn-ink-line { background: transparent; color: var(--ink); border: 2px solid var(--ink); }
+  .btn-ink-line:hover { background: var(--ink); color: #fff; }
+  .btn-ink:focus-visible,
+  .btn-ink-line:focus-visible { outline: 3px solid #fff; outline-offset: 3px; }
+
+  @media (max-width: 860px) {
+    .cierre-in { grid-template-columns: 1fr; }
+    .btn-ink, .btn-ink-line { width: 100%; justify-content: center; }
+  }
+</style>
+
+<script>
+  import { gsap } from '../utils/gsap-config';
+
+  document.querySelectorAll('[data-open-contact]').forEach((b) => {
+    b.addEventListener('click', () => {
+      document.querySelector<HTMLDialogElement>('#contact-dialog')?.showModal();
+    });
+  });
+
+  gsap.matchMedia().add('(prefers-reduced-motion: no-preference)', () => {
+    gsap.fromTo('.cierre .cto-huge',
+      { xPercent: 18 },
+      {
+        xPercent: -12, ease: 'none',
+        scrollTrigger: { trigger: '.cierre', start: 'top bottom', end: 'bottom top', scrub: 1 },
+      });
+    gsap.from('.cierre-t', {
+      yPercent: 18, opacity: 0, duration: 1, ease: 'expo.out',
+      scrollTrigger: { trigger: '.cierre', start: 'top 70%', once: true },
+    });
+  });
+</script>

@@ -55,7 +55,7 @@ function countUp(el: HTMLElement, trigger: Element) {
  * Cohete del isotipo listo para reutilizar: clona el SVG del cursor
  * (RocketCursor.astro), que ya trae el path del logo enderezado y la llama.
  */
-function cloneRocket(): SVGSVGElement | null {
+export function cloneRocket(): SVGSVGElement | null {
   const src = document.getElementById('rocket-svg');
   if (!src) return null;
   const svg = src.cloneNode(true) as SVGSVGElement;

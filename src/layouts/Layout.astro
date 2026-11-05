@@ -78,8 +78,8 @@ try {
     *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
     :root{
       --n:#E84E1B;--n-d:#c23e12;
-      --bg:#001433;--bg2:#00194a;--ink:#04102a;
-      --w:#FFFFFF;--w60:rgba(255,255,255,.6);--w40:rgba(255,255,255,.4);--w12:rgba(255,255,255,.12);--w06:rgba(255,255,255,.06);
+      --bg:#001433;--bg2:#00194a;--ink:#04102a;--paper:#F6F1E7;--n-text:#c23e12;
+      --w:#FFFFFF;--w60:rgba(255,255,255,.74);--w40:rgba(255,255,255,.56);--w12:rgba(255,255,255,.12);--w06:rgba(255,255,255,.06);
       --ease:cubic-bezier(.16,1,.3,1);
       /* Podium-identical easing — power expo out, used on all hero transitions */
       --ease-expo:cubic-bezier(.16,1,.3,1);
@@ -124,6 +124,13 @@ try {
     #flight .ship svg{width:100%;height:100%;filter:drop-shadow(0 3px 8px rgba(232,78,27,.5))}
     /* La etiqueta del capítulo viaja con la nave (abajo quedaba tapada por chat/WhatsApp) */
     #flight .lbl{position:absolute;left:50%;top:14vh;margin:26px 0 0 -.55em;white-space:nowrap;will-change:transform;writing-mode:vertical-rl;font-family:'Sofia Sans Condensed';font-size:11px;letter-spacing:.25em;text-transform:uppercase;color:var(--w40)}
+    html.tone-light #flight .lbl,html.tone-accent #flight .lbl{color:var(--ink)}
+    html.tone-light #flight .rail,html.tone-accent #flight .rail{background:rgba(4,16,42,.18)}
+    html.tone-accent #flight .fill{background:var(--ink)}
+    html.tone-accent #flight .ship svg{filter:brightness(0)}
+    html.tone-accent .chat-btn{background:var(--ink)}
+    html.tone-light #nav,html.tone-accent #nav,html.tone-end #nav{background:rgba(0,16,42,.96)!important}
+    html.tone-end #mission-hud,html.tone-end #serv-nav{opacity:0!important;visibility:hidden!important}
     @media(max-width:980px){#flight{display:none}}
 
     /* NAV */
@@ -141,8 +148,8 @@ try {
     .menu a:not(.cta)::after{content:"";position:absolute;left:0;bottom:-6px;width:0;height:1.5px;background:var(--n);transition:width .35s var(--ease)}
     .menu a:not(.cta):hover{color:#fff}
     .menu a:not(.cta):hover::after{width:100%}
-    .cta{display:inline-flex;align-items:center;gap:9px;background:var(--n);color:#fff!important;padding:11px 22px;border-radius:100px;font-weight:600;font-size:14px;overflow:hidden;transition:background .3s}
-    .cta:hover{background:var(--n-d)}
+    .cta{display:inline-flex;align-items:center;gap:9px;background:var(--n);color:var(--ink)!important;padding:11px 22px;border-radius:100px;font-weight:600;font-size:14px;overflow:hidden;transition:background .3s}
+    .cta:hover{background:#fff}
     .cta svg{width:14px;height:14px;transition:transform .35s var(--ease)}
     .cta:hover svg{transform:translateX(4px)}
     .burger{display:none;width:42px;height:42px;border:1px solid var(--w12);border-radius:50%;background:none;cursor:none;flex-direction:column;align-items:center;justify-content:center;gap:5px}
@@ -161,7 +168,7 @@ try {
     .hero-row{display:flex;align-items:flex-end;justify-content:space-between;gap:40px;flex-wrap:wrap;margin-top:clamp(36px,5vw,56px)}
     .hero-lead{max-width:430px;font-size:clamp(16px,1.4vw,18px);color:var(--w60);line-height:1.65;opacity:0}
     .hero-acts{display:flex;align-items:center;gap:18px;opacity:0}
-    .btn-fill{position:relative;display:inline-flex;align-items:center;gap:12px;background:var(--n);color:#fff;text-decoration:none;padding:17px 30px;border-radius:100px;font-weight:600;font-size:15px;overflow:hidden;isolation:isolate;border:none;font-family:'Sofia Sans',sans-serif}
+    .btn-fill{position:relative;display:inline-flex;align-items:center;gap:12px;background:var(--n);color:var(--ink);text-decoration:none;padding:17px 30px;border-radius:100px;font-weight:700;font-size:15px;overflow:hidden;isolation:isolate;border:none;font-family:'Sofia Sans',sans-serif}
     .btn-fill::before{content:"";position:absolute;inset:0;background:#fff;border-radius:100px;transform:scale(0);transform-origin:center;transition:transform .5s var(--ease);z-index:-1}
     .btn-fill:hover{color:var(--ink)}
     .btn-fill:hover::before{transform:scale(1.05)}
@@ -289,7 +296,7 @@ try {
     .nos-frame::after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(135deg,rgba(232,78,27,.05) 0 2px,transparent 2px 20px)}
     .nos-frame .tag{position:absolute;top:24px;left:24px;font-family:'Sofia Sans Condensed';font-size:13px;letter-spacing:.18em;text-transform:uppercase;color:var(--w60)}
     .nos-frame .yr{position:absolute;bottom:20px;right:26px;font-family:'Sofia Sans Condensed';font-weight:900;font-size:clamp(70px,11vw,150px);line-height:.8;color:rgba(232,78,27,.18);letter-spacing:-.04em}
-    .nos-badge{position:absolute;bottom:-26px;left:-26px;background:var(--n);color:#fff;border-radius:6px;padding:22px 26px;max-width:230px}
+    .nos-badge{position:absolute;bottom:-26px;left:-26px;background:var(--n);color:var(--ink);border-radius:6px;padding:22px 26px;max-width:230px}
     .nos-badge b{font-family:'Sofia Sans Condensed';font-size:46px;font-weight:900;line-height:.85;display:block}
     .nos-badge small{display:block;margin-top:8px;font-size:13px;line-height:1.4;opacity:.9}
     .nos-txt p{color:var(--w60);font-size:clamp(16px,1.5vw,18px);line-height:1.7;margin-top:24px}
@@ -571,7 +578,10 @@ try {
 
     // Capítulos en orden de página: Ignición (hero, sin atributo) + cada [data-chapter]
     const chapterSecs = [...document.querySelectorAll<HTMLElement>('[data-chapter]')];
-    const CHAPTERS = chapterSecs.length ? ['Ignición', ...chapterSecs.map((s) => s.dataset.chapter!)] : [];
+    const CHAPTERS = [
+      ...(document.getElementById('hero-visual') ? ['Ignición'] : []),
+      ...chapterSecs.map((s) => s.dataset.chapter!),
+    ];
     const hud     = document.getElementById('mission-hud');
     const hudIdx  = document.getElementById('hudIdx');
     const hudName = document.getElementById('hudName');
@@ -660,16 +670,36 @@ try {
         trigger: sec.parentElement?.classList.contains('pin-spacer') ? sec.parentElement : sec,
         start: 'top center',
       }));
+      // Del cierre en naranja en adelante, el navbar queda sólido y nada flota sobre el titular
+      const accentSec = document.querySelector('[data-tone="accent"]');
+      const endMark = accentSec && ScrollTrigger.create({ trigger: accentSec, start: 'top 88%' });
       const pick = (y: number) => {
         let name: string | undefined;
         marks.forEach((m, i) => { if (y >= m.start) name = chapterSecs[i].dataset.chapter; });
         if (name) setChapter(name); // antes del primer capítulo manda el pin del hero
+        if (endMark) document.documentElement.classList.toggle('tone-end', y >= endMark.start);
       };
       const doc = ScrollTrigger.create({ start: 0, end: 'max', onUpdate: (self) => pick(self.scroll()) });
       pick(doc.scroll());
+      // Con la página recién cargada los triggers aún no están medidos: se repite tras medir
+      ScrollTrigger.addEventListener('refresh', () => pick(doc.scroll()));
+
+      // Sobre paneles claros o naranja, el rail y el chat cambian para seguir viéndose
+      document.querySelectorAll<HTMLElement>('[data-tone]').forEach((sec) => {
+        const accent = sec.dataset.tone === 'accent';
+        ScrollTrigger.create({
+          trigger: sec.parentElement?.classList.contains('pin-spacer') ? sec.parentElement : sec,
+          // El naranja cambia antes: el chat y el HUD están en la parte baja de la pantalla
+          start: accent ? 'top 88%' : 'top center',
+          end: accent ? 'bottom 88%' : 'bottom center',
+          toggleClass: { targets: document.documentElement, className: accent ? 'tone-accent' : 'tone-light' },
+        });
+      });
     };
-    if (document.getElementById('hero-visual')) {
-      window.addEventListener('story:ready', createChapterTriggers, { once: true });
+    // Las páginas con pin avisan con story:ready (y __storyReady si su script corrió antes)
+    if (document.getElementById('hero-visual') || document.getElementById('sub-hero')) {
+      if ((window as any).__storyReady) createChapterTriggers();
+      else window.addEventListener('story:ready', createChapterTriggers, { once: true });
     } else {
       createChapterTriggers();
     }
@@ -707,6 +737,7 @@ try {
 
     // Si la página no incluye preloader o máscara de entrada (páginas secundarias como /servicios), remover 'loading' inmediatamente
     if (!document.getElementById('preloader') && !document.getElementById('intro-mask')) {
+      if (window.__preloaderTimeout) clearTimeout(window.__preloaderTimeout);
       document.documentElement.classList.remove('loading');
     }
   </script>

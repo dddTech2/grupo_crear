@@ -4,6 +4,7 @@ import Footer from '../../components/Footer.astro';
 import ContactDialog from '../../components/ContactDialog.astro';
 import RocketCursor from '../../components/RocketCursor.astro';
 import EntregablesSection from '../../components/EntregablesSection.astro';
+import CierreCTA from '../../components/CierreCTA.astro';
 import { servicios } from '../../data/servicios';
 import type { Servicio, Foto } from '../../data/servicios';
 import { waBase } from '../../data/contacto';
@@ -74,86 +75,72 @@ const pasos = s.pasos;
   </div>
 
   <!-- ═══════════════════════════════════════
-       BREADCRUMB + MINI HERO
+       1 · MISIÓN — promesa del servicio
   ═══════════════════════════════════════ -->
-  <section id="sub-hero" class="sub-section" aria-labelledby="sub-h1">
-    <!-- Glow -->
-    <div class="sh-glow" aria-hidden="true"></div>
-
-    <!-- Breadcrumb -->
-    <div class="wrap">
-      <nav class="breadcrumb" aria-label="Ubicación">
-        <a href="/">Inicio</a>
-        <span aria-hidden="true">→</span>
-        <a href="/servicios">Servicios</a>
-        <span aria-hidden="true">→</span>
-        <span aria-current="page">{s.nombre}</span>
-      </nav>
-
-      <div class="sub-grid">
-        <!-- Texto -->
-        <div class="sub-txt">
-          <h1 class="lead sub-h1" id="sub-h1">
-            <span class="ln"><span>{s.nombre.split(' ').slice(0,-1).join(' ')}</span></span>
-            <span class="ln"><span><em>{s.nombre.split(' ').slice(-1)[0]}.</em></span></span>
-          </h1>
-          <p class="sub-desc" id="sub-desc">{s.descripcionLarga}</p>
-          <div class="sub-acts" id="sub-acts">
-            <a
-              href={`${waBase}?text=${s.whatsappText}`}
-              class="btn-fill"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Pedir cotización
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-                <path d="M5 12h14M13 6l6 6-6 6"/>
-              </svg>
-            </a>
-            <button class="btn-line" id="openContactSub">Más información</button>
-          </div>
-        </div>
-
-        <!-- Imagen destacada -->
-        <div class="sub-img-wrap" id="sub-img-wrap">
-          <div
-            class="sub-frame"
-            style={s.fotoPrincipal
-              ? `background-image:url(${s.fotoPrincipal})`
-              : `background:${s.gradiente}`}
-            aria-hidden="true"
+  <section id="sub-hero" class="sub-section" data-chapter="Misión" aria-labelledby="sub-h1">
+    <div class="wrap sub-grid">
+      <div class="sub-txt">
+        <h1 class="sub-h1" id="sub-h1">
+          <span class="ln"><span>{s.nombre.split(' ').slice(0,-1).join(' ')}</span></span>
+          <span class="ln"><span><em>{s.nombre.split(' ').slice(-1)[0]}.</em></span></span>
+        </h1>
+        <p class="sub-desc" id="sub-desc">{s.descripcionLarga}</p>
+        <div class="sub-acts" id="sub-acts">
+          <a
+            href={`${waBase}?text=${s.whatsappText}`}
+            class="btn-fill"
+            target="_blank"
+            rel="noopener noreferrer"
           >
-            {s.fotoPrincipal && (
-              <img
-                src={s.fotoPrincipal}
-                alt=""
-                loading="eager"
-                draggable="false"
-              />
-            )}
-            <div class="sub-frame-overlay"></div>
-            <div class="sub-protect"></div>
-          </div>
-          <div class="sub-badge">
-            <b>+500</b>
-            <small>proyectos de {s.nombreCorto}</small>
-          </div>
+            Pedir cotización
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path d="M5 12h14M13 6l6 6-6 6"/>
+            </svg>
+          </a>
+          <button class="btn-line" id="openContactSub">Más información</button>
+        </div>
+      </div>
+
+      <div class="sub-img-wrap" id="sub-img-wrap">
+        <div
+          class="sub-frame"
+          style={s.fotoPrincipal || s.videoPrincipal ? undefined : `background:${s.gradiente}`}
+          aria-hidden="true"
+        >
+          {s.videoPrincipal ? (
+            <video src={s.videoPrincipal} poster={s.fotoPrincipal || undefined} muted loop playsinline autoplay preload="metadata"></video>
+          ) : s.fotoPrincipal && (
+            <img src={s.fotoPrincipal} alt="" loading="eager" draggable="false" />
+          )}
+          <div class="sub-protect"></div>
         </div>
       </div>
     </div>
   </section>
 
+  <!-- ═══════════════════════════════════════
+       2 · RETO — el problema que resuelve el servicio
+  ═══════════════════════════════════════ -->
+  <section id="reto" class="tone-paper" data-chapter="Reto" data-tone="light" aria-labelledby="reto-txt">
+    <div class="wrap">
+      <h2 class="reto-txt" id="reto-txt" set:html={s.reto}></h2>
+    </div>
+  </section>
+
+  <!-- 3 · CARGA — lo que recibe el cliente -->
   <EntregablesSection entregables={s.entregables} />
 
   <!-- ═══════════════════════════════════════
-       PROCESO DE TRABAJO
+       4 · RUTA — el cohete recorre los pasos
   ═══════════════════════════════════════ -->
-  <section id="proceso" aria-labelledby="proc-title" class="sub-section">
+  <section id="proceso" class="tone-paper" data-chapter="Ruta" data-tone="light" aria-labelledby="proc-title">
     <div class="wrap">
-      <h2 class="lead r" data-d="1" id="proc-title">Cómo <em>trabajamos.</em></h2>
+      <h2 class="lead" id="proc-title">Cómo <em>trabajamos.</em></h2>
       <div class="proc-track">
-        {pasos.map((p, i) => (
-          <div class="paso r" data-d={String(i + 1)}>
+        <div class="proc-line" aria-hidden="true"><span class="proc-fill"></span></div>
+        <span class="proc-rocket" aria-hidden="true"></span>
+        {pasos.map((p) => (
+          <div class="paso">
             <div class="paso-num">{p.num}</div>
             <div class="paso-body">
               <h3 class="paso-title">{p.titulo}</h3>
@@ -166,13 +153,12 @@ const pasos = s.pasos;
   </section>
 
   <!-- ═══════════════════════════════════════
-       GALERÍA DEL SERVICIO
+       5 · PRUEBAS — trabajo real (solo si hay fotos)
   ═══════════════════════════════════════ -->
-  <section id="galeria-serv" aria-labelledby="gal-serv-title" class="sub-section-alt">
-    <div class="wrap">
-      <h2 class="lead r" data-d="1" id="gal-serv-title">Proyectos de <em>{s.nombreCorto}.</em></h2>
-
-      {hayFotos ? (
+  {hayFotos && (
+    <section id="galeria-serv" class="sub-section" data-chapter="Pruebas" aria-labelledby="gal-serv-title">
+      <div class="wrap">
+        <h2 class="lead r" data-d="1" id="gal-serv-title">Proyectos de <em>{s.nombreCorto}.</em></h2>
         <div class="gal-sub-strip" id="galSubStrip">
           {subColFotos.map((colFotos, ci) => colFotos.length > 0 && (
             <div
@@ -198,19 +184,14 @@ const pasos = s.pasos;
             </div>
           ))}
         </div>
-      ) : (
-        <div class="gal-empty r" data-d="2">
-          <p>Las fotos de {s.nombreCorto} se cargarán próximamente.</p>
-          <span>Agrega las rutas en el campo <code>fotos[]</code> del servicio <code>{s.slug}</code></span>
-        </div>
-      )}
-    </div>
-  </section>
+      </div>
+    </section>
+  )}
 
   <!-- ═══════════════════════════════════════
        OTROS SERVICIOS
   ═══════════════════════════════════════ -->
-  <section id="otros-serv" aria-labelledby="otros-title" class="sub-section">
+  <section id="otros-serv" data-chapter="Flota" aria-labelledby="otros-title" class="sub-section">
     <div class="wrap">
       <div class="serv-head">
         <div>
@@ -235,7 +216,6 @@ const pasos = s.pasos;
             ></div>
             <div class="oc-overlay" aria-hidden="true"></div>
             <div class="oc-body">
-              <span class="oc-num">{o.numero}</span>
               <h3 class="oc-title">{o.nombreCorto}</h3>
             </div>
             <div class="oc-arrow" aria-hidden="true">
@@ -250,67 +230,8 @@ const pasos = s.pasos;
     </div>
   </section>
 
-  <!-- ═══════════════════════════════════════
-       CTA FINAL
-  ═══════════════════════════════════════ -->
-  <!-- ═══════════════════════════════════════
-       CTA DOBLE
-  ═══════════════════════════════════════ -->
-  <section class="cto-serv-section" aria-labelledby="cto-title">
-    <div class="cto-huge" aria-hidden="true">Crear</div>
-    <div class="wrap">
-      <div class="cto-container">
-
-        <!-- Columna 1: WhatsApp -->
-        <div class="cto-card r" data-d="1">
-          <div class="cto-card-glow" aria-hidden="true"></div>
-          <div class="cto-card-header">
-            <div class="cto-card-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                <path d="M3 21l1.6-4A8.5 8.5 0 1 1 8 19.4z"/>
-                <path d="M9 10c0 3 2 5 5 5"/>
-              </svg>
-            </div>
-          </div>
-          <h2 id="cto-title" class="cto-card-title">Respuesta rápida</h2>
-          <p class="cto-card-desc">Cuéntanos qué necesitas. Respondemos en menos de 24 horas con una propuesta concreta y sin compromiso.</p>
-          <a
-            href={`${waBase}?text=${s.whatsappText}`}
-            class="btn-fill cto-card-btn"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Escribir por WhatsApp
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-              <path d="M5 12h14M13 6l6 6-6 6"/>
-            </svg>
-          </a>
-        </div>
-
-        <!-- Columna 2: Cotización Formal -->
-        <div class="cto-card r" data-d="2">
-          <div class="cto-card-glow" aria-hidden="true"></div>
-          <div class="cto-card-header">
-            <div class="cto-card-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                <rect x="3" y="5" width="18" height="14" rx="2"/>
-                <path d="M3 7l9 6 9-6"/>
-              </svg>
-            </div>
-          </div>
-          <h3 class="cto-card-title">Cotización formal</h3>
-          <p class="cto-card-desc">Prefiere un presupuesto detallado por escrito. Llena el formulario y te respondemos con una cotización estructurada.</p>
-          <button class="btn-outline cto-card-btn" id="openContactSub2">
-            Pedir cotización
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-              <path d="M5 12h14M13 6l6 6-6 6"/>
-            </svg>
-          </button>
-        </div>
-
-      </div>
-    </div>
-  </section>
+  <!-- 7 · ATERRIZAJE — clímax en naranja sólido -->
+  <CierreCTA waHref={`${waBase}?text=${s.whatsappText}`} />
 
   <Footer />
   <ContactDialog />
@@ -318,116 +239,165 @@ const pasos = s.pasos;
 
 <style>
 /* ── LAYOUT BASE DE SUB-PÁGINAS ── */
-.sub-section     { background: var(--bg); }
-.sub-section-alt { background: var(--ink); }
+.sub-section { background: var(--bg); }
 
-/* ── BREADCRUMB ── */
-.breadcrumb {
-  display: flex; align-items: center; gap: 10px;
-  font-size: 13px; color: var(--w40);
-  margin-bottom: clamp(32px,5vw,56px);
+/* Paneles claros: rompen el azul para que la lectura descanse y el contenido
+   clave destaque. Tinta sobre papel = 16,76:1; acento --n-text = 4,67:1. */
+.tone-paper {
+  background: var(--paper);
+  color: var(--ink);
+  border-radius: clamp(20px, 3vw, 40px);
 }
-.breadcrumb a { color: var(--w60); text-decoration: none; transition: color .3s; }
-.breadcrumb a:hover { color: var(--n); }
+.tone-paper .lead { color: var(--ink); }
+.tone-paper .lead em { color: var(--n-text); }
 
-/* ── MINI HERO ── */
+/* ── 1 · MISIÓN ── */
 #sub-hero {
   position: relative;
   overflow: hidden;
-  /* El nav es fixed (84px top) y no empuja el contenido.
-     Este padding-top suma la altura del nav + espacio editorial. */
-  padding-top: calc(84px + clamp(40px, 6vw, 72px)) !important;
+  min-height: 100svh;
+  display: flex;
+  align-items: center;
+  /* El nav es fixed: se compensa su alto y nada más */
+  padding-top: calc(84px + clamp(16px, 2.5vw, 32px));
+  padding-bottom: clamp(40px, 5vw, 72px);
+  background:
+    radial-gradient(70vw 70vw at 100% 0%, rgba(232, 78, 27, .16), transparent 62%),
+    var(--bg);
 }
-.sh-glow {
-  position: absolute; pointer-events: none;
-  width: 60vw; height: 60vw; max-width: 800px; max-height: 800px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(232,78,27,.18), transparent 60%);
-  top: -20%; right: -10%; filter: blur(40px);
-  animation: sh-breathe 9s ease-in-out infinite alternate;
-}
-@keyframes sh-breathe {
-  from { transform: scale(.9); opacity: .7; }
-  to   { transform: scale(1.08); opacity: 1; }
-}
-
 .sub-grid {
+  width: 100%;
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: clamp(40px,6vw,80px);
+  grid-template-columns: 1.05fr 1fr;
+  gap: clamp(32px, 5vw, 72px);
   align-items: center;
 }
-.sub-h1 { margin: clamp(16px,2.5vw,28px) 0; }
-.sub-h1 .ln { display: block; overflow: hidden; }
+.sub-h1 {
+  font-family: 'Sofia Sans Condensed', sans-serif;
+  font-weight: 900;
+  font-size: clamp(50px, 7.4vw, 112px);
+  line-height: .9;
+  letter-spacing: -.04em;
+  text-transform: uppercase;
+  margin-bottom: clamp(20px, 2.6vw, 32px);
+}
+.sub-h1 em { font-style: normal; color: var(--n); }
+.sub-h1 .ln { display: block; overflow: hidden; padding-top: .12em; margin-top: -.12em; }
 .sub-h1 .ln span { display: block; }
 
 .sub-desc {
-  font-size: clamp(15px,1.4vw,18px);
-  color: var(--w60); line-height: 1.7;
-  max-width: 480px; margin-bottom: clamp(24px,3.5vw,40px);
+  font-size: clamp(16px, 1.4vw, 19px);
+  color: var(--w60); line-height: 1.65;
+  max-width: 520px; margin-bottom: clamp(24px, 3vw, 36px);
 }
 .sub-acts { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
 
-.sub-img-wrap { position: relative; }
 .sub-frame {
   position: relative;
-  border-radius: 10px; overflow: hidden;
-  aspect-ratio: 4/3;
-  background-size: cover; background-position: center;
+  border-radius: 12px; overflow: hidden;
+  aspect-ratio: 4/5;
+  max-height: calc(100svh - 150px);
+  width: 100%;
 }
-.sub-frame img { width: 100%; height: 100%; object-fit: cover; display: block; }
-.sub-frame-overlay {
-  position: absolute; inset: 0;
-  background: linear-gradient(to top, rgba(0,20,60,.3), transparent 60%);
+/* 116 % de alto: margen para el parallax interno sin dejar bordes vacíos */
+.sub-frame img,
+.sub-frame video {
+  position: absolute; left: 0; top: -8%;
+  width: 100%; height: 116%;
+  object-fit: cover; display: block;
 }
 .sub-protect { position: absolute; inset: 0; z-index: 2; }
-.sub-badge {
-  position: absolute; bottom: -20px; left: -20px;
-  background: var(--n); color: #fff;
-  border-radius: 8px; padding: 18px 22px;
-}
-.sub-badge b { font-family: 'Sofia Sans Condensed',sans-serif; font-size: 42px; font-weight: 900; line-height: .85; display: block; }
-.sub-badge small { display: block; margin-top: 6px; font-size: 13px; opacity: .9; }
 
-@media (max-width: 768px) {
+@media (max-width: 860px) {
+  #sub-hero { min-height: 0; }
   .sub-grid { grid-template-columns: 1fr; }
-  .sub-badge { left: 0; }
+  .sub-frame { aspect-ratio: 4/3; max-height: none; }
 }
 
-/* ── PROCESO ── */
+/* ── 2 · RETO ── */
+#reto { min-height: 92svh; display: flex; align-items: center; }
+#reto .wrap { width: 100%; }
+@media (max-width: 860px) { #reto { min-height: 72svh; } }
+.reto-txt {
+  font-family: 'Sofia Sans Condensed', sans-serif;
+  font-weight: 800;
+  font-size: clamp(36px, 6vw, 92px);
+  line-height: 1;
+  letter-spacing: -.03em;
+  max-width: 19em;
+  color: var(--ink);
+}
+.reto-txt :global(em) { font-style: normal; color: var(--n-text); }
+
+/* ── 4 · RUTA ── */
+/* Alto de pantalla completa para que quede estable mientras está fija;
+   el padding superior libra el navbar y la barra de servicios */
+#proceso {
+  min-height: 100svh;
+  padding-top: 150px;
+  padding-bottom: clamp(40px, 6vh, 72px);
+  display: flex; flex-direction: column; justify-content: center;
+}
+#proceso .wrap { width: 100%; }
 .proc-track {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 0;
+  gap: clamp(20px, 3vw, 44px);
   position: relative;
-  margin-top: clamp(36px,5vw,56px);
+  margin-top: clamp(64px, 8vh, 96px);
 }
-.proc-track::before {
-  content: "";
-  position: absolute; top: 28px; left: 10%; right: 10%; height: 1px;
-  background: linear-gradient(90deg, var(--n), rgba(232,78,27,.1));
+/* De la primera bolita a la última: la columna 4 empieza en el 75 % + un cuarto del gap */
+.proc-line {
+  position: absolute; top: 27px; left: 28px;
+  right: calc(25% - 28px - clamp(20px, 3vw, 44px) * .25);
+  height: 2px;
+  background: rgba(4, 16, 42, .16);
 }
-.paso { padding: 0 clamp(12px,2vw,24px); }
+.proc-fill {
+  position: absolute; inset: 0;
+  background: var(--n);
+  transform: scaleX(0); transform-origin: left;
+}
+/* Corre sobre la línea, por encima de las bolitas, y se detiene antes de la última */
+.proc-rocket {
+  position: absolute; left: 60px; top: 6px; z-index: 2;
+  width: 44px; height: 44px;
+}
+.proc-rocket :global(svg) { width: 100%; height: 100%; transform: rotate(90deg); display: block; }
+
 .paso-num {
   width: 56px; height: 56px; border-radius: 50%;
-  background: var(--n); color: #fff;
-  font-family: 'Sofia Sans Condensed',sans-serif;
+  background: var(--paper); color: var(--ink);
+  border: 2px solid var(--ink);
+  font-family: 'Sofia Sans Condensed', sans-serif;
   font-size: 22px; font-weight: 900;
   display: flex; align-items: center; justify-content: center;
-  margin-bottom: 20px; position: relative; z-index: 1;
+  margin-bottom: 22px; position: relative; z-index: 1;
+  transition: background .3s, border-color .3s, transform .4s var(--ease);
 }
+.paso:global(.on) .paso-num { background: var(--n); border-color: var(--n); transform: scale(1.08); }
 .paso-title {
-  font-family: 'Sofia Sans Condensed',sans-serif;
-  font-size: 22px; font-weight: 800; text-transform: uppercase;
-  margin-bottom: 8px;
+  font-family: 'Sofia Sans Condensed', sans-serif;
+  font-size: clamp(22px, 2vw, 28px); font-weight: 800; text-transform: uppercase;
+  line-height: 1.05;
+  margin-bottom: 10px; color: var(--ink);
 }
-.paso-desc { font-size: 14px; color: var(--w60); line-height: 1.6; }
+.paso-desc { font-size: 16px; color: rgba(4, 16, 42, .78); line-height: 1.55; }
 
-@media (max-width: 768px) {
-  .proc-track { grid-template-columns: 1fr; gap: 28px; }
-  .proc-track::before { top: 28px; bottom: 28px; left: 28px; right: auto; width: 1px; height: auto; }
-  .paso { display: grid; grid-template-columns: 56px 1fr; gap: 16px; align-items: start; }
+@media (max-width: 1023px) {
+  .proc-track { grid-template-columns: 1fr; gap: 32px; }
+  .proc-line { top: 28px; bottom: 60px; left: 27px; right: auto; width: 2px; height: auto; }
+  .proc-fill { transform: scaleY(0); transform-origin: top; }
+  .proc-rocket { display: none; }
+  .paso { display: grid; grid-template-columns: 56px 1fr; gap: 18px; align-items: start; }
   .paso-num { margin-bottom: 0; }
+}
+/* Sin movimiento: la ruta se muestra completa */
+@media (prefers-reduced-motion: reduce) {
+  .proc-fill { transform: none; }
+  .proc-rocket { display: none; }
+  .paso-num { background: var(--n); border-color: var(--n); }
+  .gal-sub-track { animation: none !important; }
 }
 
 /* ── GALERÍA SUB — Film Strips ── */
@@ -497,19 +467,6 @@ const pasos = s.pasos;
 @media (max-width: 900px)  { .gal-sub-strip { grid-template-columns: repeat(3, 1fr); height: 70vh; } }
 @media (max-width: 580px)  { .gal-sub-strip { grid-template-columns: repeat(2, 1fr); height: 60vh; } }
 
-.gal-empty {
-  margin-top: clamp(28px,4vw,48px);
-  padding: clamp(40px,6vw,80px) 0;
-  text-align: center;
-  border: 1px dashed var(--w12); border-radius: 10px;
-}
-.gal-empty p { color: var(--w60); font-size: 16px; margin-bottom: 12px; }
-.gal-empty span { font-size: 13px; color: var(--w40); }
-.gal-empty code { color: var(--n); background: rgba(232,78,27,.08); border: 1px solid rgba(232,78,27,.2); padding: 2px 8px; border-radius: 4px; font-family: monospace; }
-
-@media (max-width: 1024px) { .gal-grid-sub { columns: 3; } }
-@media (max-width: 680px)  { .gal-grid-sub { columns: 2; } }
-
 /* ── OTROS SERVICIOS ── */
 .otros-grid {
   display: grid;
@@ -542,12 +499,6 @@ const pasos = s.pasos;
   background: linear-gradient(to top, rgba(0,12,36,.92) 0%, transparent 60%);
 }
 .oc-body { position: relative; z-index: 2; padding: 16px; }
-.oc-num {
-  display: block;
-  font-family: 'Sofia Sans Condensed',sans-serif;
-  font-size: 11px; letter-spacing: .2em; text-transform: uppercase;
-  color: var(--n); margin-bottom: 6px;
-}
 .oc-title {
   font-family: 'Sofia Sans Condensed',sans-serif;
   font-size: 18px; font-weight: 800; text-transform: uppercase;
@@ -567,155 +518,15 @@ const pasos = s.pasos;
 @media (max-width: 1024px) { .otros-grid { grid-template-columns: repeat(3,1fr); } }
 @media (max-width: 680px)  { .otros-grid { grid-template-columns: repeat(2,1fr); } }
 
-/* ── CTA DOBLE ── */
-.cto-serv-section {
-  background: var(--ink);
-  position: relative;
-  overflow: hidden;
-  padding: clamp(80px, 11vw, 150px) 0;
-}
-.cto-container {
-  position: relative;
-  z-index: 2;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: clamp(24px, 4vw, 48px);
-}
-.cto-card {
-  position: relative;
-  background: rgba(255, 255, 255, 0.02);
-  backdrop-filter: blur(12px) saturate(180%);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  border-radius: 20px;
-  padding: clamp(30px, 5vw, 56px);
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  transition: border-color 0.4s var(--ease), background 0.4s var(--ease), transform 0.4s var(--ease);
-  overflow: hidden;
-}
-.cto-card:hover {
-  border-color: rgba(232, 78, 27, 0.35);
-  background: rgba(255, 255, 255, 0.03);
-  transform: translateY(-4px);
-}
-.cto-card-glow {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background: radial-gradient(
-    300px circle at var(--mx, 50%) var(--my, 50%),
-    rgba(232, 78, 27, 0.08),
-    transparent 65%
-  );
-  opacity: 0;
-  transition: opacity 0.4s var(--ease);
-  z-index: 0;
-}
-.cto-card:hover .cto-card-glow {
-  opacity: 1;
-}
-.cto-card-header {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  margin-bottom: 24px;
-  position: relative;
-  z-index: 1;
-}
-.cto-card-icon {
-  width: 48px;
-  height: 48px;
-  border-radius: 12px;
-  background: rgba(232, 78, 27, 0.08);
-  border: 1px solid rgba(232, 78, 27, 0.2);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--n);
-  transition: transform 0.4s var(--ease), background 0.4s var(--ease);
-}
-.cto-card:hover .cto-card-icon {
-  transform: scale(1.1) rotate(5deg);
-  background: rgba(232, 78, 27, 0.15);
-}
-.cto-card-icon svg {
-  width: 24px;
-  height: 24px;
-}
-.cto-card-title {
-  font-family: 'Sofia Sans Condensed', sans-serif;
-  font-size: clamp(24px, 3vw, 42px);
-  font-weight: 900;
-  text-transform: uppercase;
-  color: #fff;
-  margin: 0 0 16px 0;
-  line-height: 1;
-  letter-spacing: -0.02em;
-  position: relative;
-  z-index: 1;
-}
-.cto-card-desc {
-  font-size: clamp(14px, 1.2vw, 16px);
-  color: var(--w60);
-  line-height: 1.65;
-  margin: 0 0 36px 0;
-  max-width: 480px;
-  flex-grow: 1;
-  position: relative;
-  z-index: 1;
-}
-.cto-card-btn {
-  position: relative;
-  z-index: 1;
-}
-.btn-outline {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  gap: 12px;
-  background: transparent;
-  color: #fff;
-  text-decoration: none;
-  padding: 17px 30px;
-  border-radius: 100px;
-  font-weight: 600;
-  font-size: 15px;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  font-family: 'Sofia Sans', sans-serif;
-  cursor: none;
-  transition: background 0.3s, border-color 0.3s, color 0.3s;
-}
-.btn-outline:hover {
-  background: #fff;
-  border-color: #fff;
-  color: var(--ink);
-}
-.btn-outline svg {
-  width: 16px;
-  height: 16px;
-  transition: transform 0.3s;
-}
-.btn-outline:hover svg {
-  transform: translateX(4px);
-  stroke: var(--ink);
-}
-@media (max-width: 860px) {
-  .cto-container {
-    grid-template-columns: 1fr;
-    gap: 24px;
-  }
-}
-
 /* ── STICKY NAV (CÁPSULA FLOTANTE PREMIUM) ── */
 #serv-nav {
-  position: sticky;
-  top: 92px; /* Mayor espacio (28px) por debajo del navbar colapsado de 64px para dar aire visual */
+  position: fixed;
+  top: 92px; /* Justo debajo del navbar */
+  left: 50%;
   z-index: 200;
   width: max-content;
   max-width: calc(100vw - 40px);
-  margin: 24px auto;
-  background: rgba(0, 16, 42, 0.78);
+  background: rgba(0, 16, 42, 0.94);
   backdrop-filter: blur(20px) saturate(180%);
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 100px;
@@ -726,7 +537,7 @@ const pasos = s.pasos;
   /* Oculto por defecto */
   opacity: 0;
   visibility: hidden;
-  transform: translateY(-10px) scale(0.95);
+  transform: translate(-50%, -10px) scale(0.95);
   transition: 
     opacity 0.4s var(--ease), 
     visibility 0.4s var(--ease), 
@@ -735,7 +546,7 @@ const pasos = s.pasos;
 #serv-nav.visible {
   opacity: 1;
   visibility: visible;
-  transform: translateY(0) scale(1);
+  transform: translate(-50%, 0) scale(1);
 }
 .sn-inner {
   display: flex;
@@ -774,6 +585,7 @@ const pasos = s.pasos;
 
 <script>
   import { gsap, ScrollTrigger } from '../../utils/gsap-config';
+  import { cloneRocket } from '../../scripts/story';
 
   const prefersRM = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -793,28 +605,116 @@ const pasos = s.pasos;
     }
   });
 
-  /* ── HERO ENTRANCE ── */
-  if (!prefersRM) {
-    // Seteamos el estado inicial en JS de inmediato
-    gsap.set('.sub-desc',     { opacity: 0, y: 20 });
-    gsap.set('.sub-acts',     { opacity: 0, y: 16 });
-    gsap.set('.sub-img-wrap', { opacity: 0, x: 30 });
+  /* Parte el texto en palabras conservando los <em> (el texto sigue siendo texto) */
+  const splitWords = (root: HTMLElement) => {
+    const walk = (node: Node) => {
+      [...node.childNodes].forEach((c) => {
+        if (c.nodeType !== Node.TEXT_NODE) return walk(c);
+        const frag = document.createDocumentFragment();
+        (c.textContent ?? '').split(/(\s+)/).forEach((t) => {
+          if (!t.trim()) return frag.append(t);
+          const w = document.createElement('span');
+          w.className = 'w';
+          w.textContent = t;
+          frag.append(w);
+        });
+        c.replaceWith(frag);
+      });
+    };
+    walk(root);
+    return [...root.querySelectorAll<HTMLElement>('.w')];
+  };
 
-    gsap.timeline({ defaults: { ease: 'power4.out' } })
-      .from('.sub-h1 .ln span',  { y: '105%', stagger: .12, duration: .9 }, .25)
-      .to('.sub-desc',         { opacity: 1, y: 0, duration: .7 }, '-=.5')
-      .to('.sub-acts',         { opacity: 1, y: 0, duration: .6 }, '-=.4')
-      .to('.sub-img-wrap',     { opacity: 1, x: 0, duration: .9 }, .3);
-  }
+  const pasos = gsap.utils.toArray<HTMLElement>('.paso');
+  const mm = gsap.matchMedia();
 
-  /* ── PROCESO — ANIMACIÓN SECUENCIAL ── */
-  if (!prefersRM) {
-    gsap.from('.paso', {
-      opacity: 0, y: 30,
-      stagger: .15, duration: .8, ease: 'power3.out',
-      scrollTrigger: { trigger: '#proceso', start: 'top 75%' },
+  mm.add('(prefers-reduced-motion: no-preference)', () => {
+    /* 1 · Misión: entrada y parallax interno de la imagen */
+    gsap.timeline({ defaults: { ease: 'expo.out' } })
+      .from('.sub-h1 .ln > span', { yPercent: 105, stagger: .12, duration: 1 }, .1)
+      .from(['.sub-desc', '.sub-acts'], { opacity: 0, y: 20, stagger: .1, duration: .8 }, .45)
+      .fromTo('.sub-frame',
+        { clipPath: 'inset(12% 8% 12% 8% round 12px)', opacity: 0 },
+        { clipPath: 'inset(0% 0% 0% 0% round 12px)', opacity: 1, duration: 1.2 }, .2);
+    const media = document.querySelector('.sub-frame img, .sub-frame video');
+    if (media) {
+      gsap.to(media, {
+        yPercent: -7, ease: 'none',
+        scrollTrigger: { trigger: '#sub-hero', start: 'top top', end: 'bottom top', scrub: true },
+      });
+    }
+
+    /* 2 · Reto: el panel claro se abre y la frase se enciende palabra por palabra */
+    gsap.fromTo('#reto',
+      { clipPath: 'inset(0% 5% 0% 5% round 40px)' },
+      {
+        clipPath: 'inset(0% 0% 0% 0% round 40px)', ease: 'none',
+        scrollTrigger: { trigger: '#reto', start: 'top bottom', end: 'top 40%', scrub: true },
+      });
+    const reto = document.querySelector<HTMLElement>('.reto-txt');
+    if (reto) {
+      gsap.fromTo(splitWords(reto),
+        { opacity: .14 },
+        {
+          opacity: 1, ease: 'none', stagger: .06,
+          scrollTrigger: { trigger: reto, start: 'top 82%', end: 'bottom 55%', scrub: .5 },
+        });
+    }
+
+    /* 5 · Pruebas: la galería entra con una leve subida */
+    if (document.getElementById('galSubStrip')) {
+      gsap.from('#galSubStrip', {
+        y: 60, opacity: 0, duration: 1.1, ease: 'expo.out',
+        scrollTrigger: { trigger: '#galSubStrip', start: 'top 85%', once: true },
+      });
+    }
+  });
+
+  /* 4 · Ruta (escritorio): sección fija; el cohete recorre la línea y enciende cada paso */
+  mm.add('(min-width: 1024px) and (prefers-reduced-motion: no-preference)', () => {
+    const line   = document.querySelector<HTMLElement>('.proc-line');
+    const holder = document.querySelector<HTMLElement>('.proc-rocket');
+    if (!line || !holder) return;
+    const rocket = cloneRocket();
+    if (rocket) holder.replaceChildren(rocket);
+
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: '#proceso', pin: true, start: 'top top', end: '+=150%',
+        scrub: .6, invalidateOnRefresh: true,
+      },
+      onUpdate() {
+        const p = tl.progress();
+        pasos.forEach((el, i) => el.classList.toggle('on', p >= i / (pasos.length - 1) - .02));
+      },
     });
-  }
+    tl.to('.proc-fill', { scaleX: 1, ease: 'none', duration: 1 }, 0)
+      .to(holder, { x: () => line.offsetWidth - 92, ease: 'none', duration: 1 }, 0);
+    pasos[0]?.classList.add('on');
+
+    return () => {
+      holder.replaceChildren();
+      pasos.forEach((el) => el.classList.remove('on'));
+    };
+  });
+
+  /* 4 · Ruta (móvil/tablet): la línea baja con el scroll y cada paso se enciende al llegar */
+  mm.add('(max-width: 1023px) and (prefers-reduced-motion: no-preference)', () => {
+    gsap.to('.proc-fill', {
+      scaleY: 1, ease: 'none',
+      scrollTrigger: { trigger: '.proc-track', start: 'top 70%', end: 'bottom 70%', scrub: true },
+    });
+    pasos.forEach((el) => {
+      ScrollTrigger.create({ trigger: el, start: 'top 70%', toggleClass: 'on' });
+    });
+  });
+
+  /* Layout crea los capítulos del HUD cuando los pins ya existen */
+  (window as any).__storyReady = true;
+  window.dispatchEvent(new CustomEvent('story:ready'));
+  ScrollTrigger.sort();
+  ScrollTrigger.refresh();
+  document.fonts?.ready.then(() => ScrollTrigger.refresh());
 
   /* ── GALERÍA SUB — Strips usan CSS animation; solo spotlight de cursor ── */
   document.querySelectorAll<HTMLElement>('.gal-item-sub').forEach(item => {
@@ -836,14 +736,5 @@ const pasos = s.pasos;
     document.querySelector<HTMLDialogElement>('#contact-dialog')?.showModal();
   };
   document.getElementById('openContactSub')?.addEventListener('click', openDialog);
-  document.getElementById('openContactSub2')?.addEventListener('click', openDialog);
 
-  /* ── CTA CARDS — SPOTLIGHT DE CURSOR ───────────────── */
-  document.querySelectorAll<HTMLElement>('.cto-card').forEach(card => {
-    card.addEventListener('mousemove', (e: MouseEvent) => {
-      const r = card.getBoundingClientRect();
-      card.style.setProperty('--mx', `${e.clientX - r.left}px`);
-      card.style.setProperty('--my', `${e.clientY - r.top}px`);
-    });
-  });
 </script>

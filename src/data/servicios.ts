@@ -26,6 +26,8 @@ export interface Servicio {
   entregables: Entregable[];
   fotos: Foto[];          // se llenan al subir las fotos clasificadas por servicio
   fotoPrincipal: string;  // fondo de la bento card (usa gradiente si está vacío)
+  videoPrincipal?: string; // si existe, reemplaza a la foto en el hero del servicio
+  reto: string;           // tensión del capítulo «Reto»; <em> marca el remate
   whatsappText: string;   // texto URL-encoded para pre-llenar WhatsApp
   gradiente: string;      // fallback CSS gradient cuando no hay foto
   pasos: Paso[];          // metodología personalizada por servicio
@@ -37,6 +39,7 @@ export const servicios: Servicio[] = [
     numero: '01',
     nombre: 'Impresión Gran Formato',
     nombreCorto: 'Gran Formato',
+    reto: 'En la calle nadie se detiene a leer. Si tu pieza no se ve de lejos y con el color exacto de tu marca, <em>es como si no existiera.</em>',
     descripcionCorta: 'Vallas, pendones, lonas y backlight con calidad fotográfica y color fiel a tu marca.',
     descripcionLarga:
       'Producción e impresión de gran escala para cualquier superficie. Trabajamos con los mejores materiales del mercado y tecnología de punta para garantizar colores exactos a tu manual de marca, sin importar el tamaño o el soporte.',
@@ -119,6 +122,7 @@ export const servicios: Servicio[] = [
     numero: '02',
     nombre: 'Material P.O.P',
     nombreCorto: 'Material POP',
+    reto: 'La decisión de compra se toma frente a la góndola. Si ahí tu marca no llama la atención, <em>la venta se la lleva la de al lado.</em>',
     descripcionCorta: 'Exhibidores, displays y activaciones de punto de venta diseñados para impulsar la decisión de compra.',
     descripcionLarga:
       'Material POP estratégico que convierte browsers en compradores. Diseñamos y producimos toda la familia de materiales de punto de venta: desde el stopper de góndola hasta el exhibidor de isla, todos alineados al visual merchandising de tu marca.',
@@ -158,6 +162,7 @@ export const servicios: Servicio[] = [
     numero: '03',
     nombre: 'Branding & Identidad',
     nombreCorto: 'Branding',
+    reto: 'Antes de leer tu propuesta, el cliente ya juzgó tu logo, tus colores y tu papelería. Si no inspiran confianza, <em>la conversación se acaba ahí.</em>',
     descripcionCorta: 'Construcción y rediseño de marca: logo, manual, sistema visual y aplicaciones que generan confianza B2B.',
     descripcionLarga:
       'Una marca que no se ve profesional no se contrata. Construimos identidades visuales completas desde la estrategia hasta las aplicaciones: logo, tipografía corporativa, paleta de color, manual de identidad y todos los puntos de contacto visual de tu empresa.',
@@ -186,6 +191,7 @@ export const servicios: Servicio[] = [
     numero: '04',
     nombre: 'Fotografía Publicitaria',
     nombreCorto: 'Fotografía',
+    reto: 'Una foto improvisada le dice a tu cliente que tu empresa también improvisa. Una buena imagen <em>vende antes de que hables.</em>',
     descripcionCorta: 'Producto, corporativa y editorial. Imágenes que refuerzan tu profesionalismo y atraen clientes de valor.',
     descripcionLarga:
       'Las imágenes son el primer juicio que hacen tus clientes sobre tu empresa. Producimos fotografía publicitaria de alto estándar: sesiones de producto, fotografía corporativa y editorial para que tu marca luzca exactamente como merece.',
@@ -199,7 +205,7 @@ export const servicios: Servicio[] = [
       { svg: 'M11 5H6a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2v-5m-1.414-9.414a2 2 0 1 1 2.828 2.828L11.828 15H9v-2.828l8.586-8.586z', nombre: 'Retoque y post-producción', desc: 'Edición profesional y color grading.' },
     ],
     fotos: [],
-    fotoPrincipal: '',
+    fotoPrincipal: 'https://res.cloudinary.com/nvptziio/image/upload/f_auto,q_auto,w_1200,c_limit/modelo-congreso-ibague.png',
     whatsappText: encodeURIComponent('Hola, quiero cotizar una sesión de Fotografía Publicitaria para mi empresa.'),
     gradiente: 'linear-gradient(135deg,#0a2550 0%,#04102a 100%)',
     pasos: [
@@ -214,6 +220,7 @@ export const servicios: Servicio[] = [
     numero: '05',
     nombre: 'Diseño & Desarrollo Web',
     nombreCorto: 'Diseño Web',
+    reto: 'Tu sitio atiende clientes mientras duermes, o los manda donde la competencia. Si carga lento o no dice qué haces, <em>ya los perdiste.</em>',
     descripcionCorta: 'Sitios orientados a conversión con SEO técnico y local para que Google te encuentre antes que a la competencia.',
     descripcionLarga:
       'Un sitio web que no convierte es una tarjeta de presentación cara. Diseñamos y desarrollamos sitios web orientados a resultados: rápidos, bien posicionados en Google y construidos para convertir visitantes en clientes de manera sistemática.',
@@ -227,7 +234,8 @@ export const servicios: Servicio[] = [
       { svg: 'M9 19v-6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2zm0 0V9a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v10m-6 0a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2m0 0V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-2a2 2 0 0 1-2-2z', nombre: 'Analytics y reportes', desc: 'Seguimiento de conversiones y tráfico mensual.' },
     ],
     fotos: [],
-    fotoPrincipal: '',
+    fotoPrincipal: '/posters/diseno-web.webp',
+    videoPrincipal: '/VistaMacCinematica_3.mp4',
     whatsappText: encodeURIComponent('Hola, quiero cotizar un sitio web para mi empresa con SEO incluido.'),
     gradiente: 'linear-gradient(135deg,#0a2d6b 0%,#001433 100%)',
     pasos: [
@@ -242,6 +250,7 @@ export const servicios: Servicio[] = [
     numero: '06',
     nombre: 'Campañas Integrales',
     nombreCorto: 'Campañas',
+    reto: 'Cuando cada pieza dice algo distinto, el cliente no recuerda nada. Una campaña funciona <em>cuando todo habla al mismo tiempo.</em>',
     descripcionCorta: 'Del concepto a la producción: lanzamientos, temporadas y activaciones de marca con una sola dirección creativa.',
     descripcionLarga:
       'Una campaña integral es cuando todo habla al mismo tiempo. Dirigimos el concepto creativo y coordinamos todos los materiales: piezas impresas, gráficas digitales, fotografía y activaciones de punto de venta, todo con coherencia visual de principio a fin.',
@@ -255,7 +264,7 @@ export const servicios: Servicio[] = [
       { svg: 'M9 19v-6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2zm0 0V9a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v10m-6 0a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2m0 0V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-2a2 2 0 0 1-2-2z', nombre: 'Dirección creativa unificada', desc: 'Un solo equipo, una sola voz de marca.' },
     ],
     fotos: [],
-    fotoPrincipal: '',
+    fotoPrincipal: 'https://res.cloudinary.com/nvptziio/image/upload/f_auto,q_auto,w_1200,c_limit/panoramica-exhibicion-museo-memoria.webp',
     whatsappText: encodeURIComponent('Hola, me interesa cotizar una Campaña Integral para mi empresa.'),
     gradiente: 'linear-gradient(135deg,#b53c12 0%,#3a1306 100%)',
     pasos: [

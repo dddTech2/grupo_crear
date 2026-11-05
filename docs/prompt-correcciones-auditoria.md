@@ -182,9 +182,10 @@ pero inflan el despliegue. Pregúntame antes de borrarlos.
     `.ent-kicker` y `.cto-card-kicker`.
 
   Los hallazgos que dependían de ellos (parte de A4, A7 y P6) aplican solo a lo que queda.
-- En `/servicios` y el detalle no existe StarField, así que nunca llega `scene:ready` y el preloader
-  espera los 4,5 s del timeout. Por eso sale en consola «Preloader timeout reached». Corrígelo:
-  que esas páginas marquen la escena lista de inmediato.
+- Las páginas de servicio se rediseñaron después de la auditoría (ver «Narrativa de las páginas de servicio» en MASTER):
+  ya no tienen breadcrumb, tarjetas de vidrio del CTA ni el mensaje de `fotos[]`. A7, A8 y el aviso del
+  preloader en páginas secundarias ya están resueltos: verifícalos y no los rehagas. Texto sobre naranja siempre en
+  `--ink`. No vuelvas a poner «+500 proyectos» por servicio: se quitó por ser una cifra sin verificar (M5).
 - Conserva la «Misión de despegue»: los 7 capítulos, el HUD, el cielo estrellado, la órbita, el
   viaje horizontal de casos y el aterrizaje. Si un hallazgo exige quitar una pieza de la narrativa,
   pregúntame antes.

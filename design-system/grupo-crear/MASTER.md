@@ -9,21 +9,27 @@
 
 | Rol | Token | Valor |
 |---|---|---|
-| Fondo único (sólido en toda la página) | `--bg` | `#001433` |
+| Fondo base (sólido) | `--bg` | `#001433` |
+| Panel claro (páginas de servicio) | `--paper` | `#F6F1E7` |
+| Acento sobre papel | `--n-text` | `#c23e12` |
 | Superficie elevada (dialog, hover de tarjeta) | `--bg2` | `#00194a` |
 | Tinta oscura (texto sobre blanco) | `--ink` | `#04102a` |
 | Marca / CTA | `--n` | `#E84E1B` |
 | Marca hover | `--n-d` | `#c23e12` |
 | Texto principal | `--w` | `#FFFFFF` |
-| Texto secundario | `--w60` | `rgba(255,255,255,.6)` |
-| Texto terciario / labels | `--w40` | `rgba(255,255,255,.4)` |
+| Texto secundario | `--w60` | `rgba(255,255,255,.74)` (10,22:1) |
+| Texto terciario | `--w40` | `rgba(255,255,255,.56)` (6,27:1) |
 | Bordes y hairlines | `--w12` / `--w06` | `rgba(255,255,255,.12)` / `.06` |
 | Estrellas (StarField) | — | `#FFFFFF`, `#BFD4FF`, `#FF9F70` (≈8 %) |
 
 Reglas:
-- Un solo fondo sólido `--bg`. Las secciones se separan con hairline `--w06` y espacio, **no** alternando colores.
+- Home: un solo fondo sólido `--bg`; las secciones se separan con hairline `--w06` y espacio.
+- Páginas de servicio: la intensidad sube con la historia. Azul (confianza) → papel (lectura y claridad) → azul → papel → naranja sólido (acción). El naranja pleno se reserva para el cierre.
+- Todo fondo es sólido: sin vidrio ni glow con blur en secciones nuevas.
 - `--w40` no alcanza 4.5:1 sobre `--bg`: úsalo solo para labels ≥ 12 px en mayúsculas espaciadas, nunca para párrafos.
 - El naranja `--n` sobre `--bg` vale para titulares y acentos; para texto pequeño usa blanco.
+- **Texto sobre naranja: siempre tinta `--ink` (4,98:1).** El blanco sobre `--n` da 3,79:1 y no pasa AA. Hover de CTA: relleno blanco, no `--n-d`.
+- Sobre `--paper`: texto `--ink` (16,76:1), secundario `rgba(4,16,42,.78)`, acento `--n-text` (4,67:1). `--n` sobre papel da 3,37:1: solo elementos gráficos.
 
 ## Tipografía
 
@@ -32,9 +38,8 @@ Reglas:
 | Titulares (`h1.big`, `.lead`) | Sofia Sans Condensed | 900 | `clamp(38px, 6.5vw, 86px)`; H1 `clamp(60px, 10vw, 150px)` |
 | Títulos de fila/tarjeta | Sofia Sans Condensed | 800 | `clamp(20px, 3.4vw, 46px)` |
 | Cuerpo | Sofia Sans | 400–600 | 16–18 px, line-height 1.6–1.7 |
-| Labels (`.idx`, `.kick`) | Sofia Sans Condensed | 400 | 10–13 px, tracking .18–.26em, MAYÚSCULAS |
 
-Titulares en MAYÚSCULAS con tracking negativo (−.035em). Las palabras acento van en `<em>` naranja.
+**Sin tags ni eyebrows sobre los títulos** (decisión de marca: se ven genéricos). Titulares en MAYÚSCULAS con tracking negativo (−.035em). Las palabras acento van en `<em>` naranja.
 
 ## Motion
 
@@ -42,7 +47,7 @@ Titulares en MAYÚSCULAS con tracking negativo (−.035em). Las palabras acento 
 - **Curva de marca:** `expo.out` ≡ `cubic-bezier(.16,1,.3,1)` (`--ease`).
 - **Duraciones:** micro-interacción 150–350 ms; reveal 0.9–1.1 s; scrub 0.6–1.
 - **Solo** `transform`, `opacity` y `clip-path`. Nunca animar `filter: blur()`, `width`, `height`, `top`.
-- **Pins:** como máximo 2 por página (hoy: 1, el hero).
+- **Pins:** como máximo 2 por página (home: hero y casos; servicio: 1, la Ruta).
 - `prefers-reduced-motion`: sin warp, sin scrub decorativo; todo el contenido visible y estático.
 
 ### Narrativa "Misión de despegue"
@@ -59,6 +64,18 @@ Titulares en MAYÚSCULAS con tracking negativo (−.035em). Las palabras acento 
 
 El rail "Altitude" (`#flight`) muestra el progreso y el nombre del capítulo (`data-chapter`).
 Código: hero en `src/pages/index.astro`, capítulos 2–5 en `src/scripts/story.ts`, cielo en `src/components/StarField.astro`.
+
+### Narrativa de las páginas de servicio
+
+| Cap. | Sección | Tono | Efecto |
+|---|---|---|---|
+| Misión | `#sub-hero` | Azul | Promesa + imagen con reveal y parallax interno |
+| Reto | `#reto` | Papel | La frase de `servicio.reto` se enciende palabra por palabra |
+| Carga | `#entregables` | Azul | Qué recibe el cliente |
+| Ruta | `#proceso` | Papel | Pin: el cohete recorre la línea y enciende cada paso |
+| Pruebas | `#galeria-serv` | Azul | Fotos reales; la sección no existe si `fotos` está vacío |
+| Flota | `#otros-serv` | Azul | Otros servicios |
+| Aterrizaje | `CierreCTA` | Naranja | Clímax: WhatsApp + cotización formal |
 
 ## Componentes
 
