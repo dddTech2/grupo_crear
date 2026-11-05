@@ -76,7 +76,7 @@ Hallazgos de PSI que siguen vigentes en el código local o que la auditoría no 
   principal, porque falsea el TBT.
 - **Ya no se usa Netlify.** El adapter es `@astrojs/node` (`mode: 'standalone'`). Para servir el
   build igual que en producción usa
-  `HOST=127.0.0.1 PORT=4400 node ./dist/server/entry.mjs`, o `npm run preview`. El 4321 suele
+  `HOST=127.0.0.1 PORT=4400 node ./server.mjs` (añade compresión y caché al servidor de Astro). El 4321 suele
   ocuparlo el `astro dev` del usuario: no lo mates.
 - **Despliegue:** cada push a `main` dispara `.github/workflows/deploy.yml`:
   1. Construye la imagen Docker (`Dockerfile`, Node 22 alpine) y la sube a GHCR.
@@ -92,7 +92,7 @@ Hallazgos de PSI que siguen vigentes en el código local o que la auditoría no 
 
 Usa una sola ronda de preguntas para estos datos. No inventes valores ni dejes marcadores de posición
 nuevos:
-- **C1:** WhatsApp, teléfono y email reales de contacto, y las URL reales de las redes sociales (M2).
+- **C1:** WhatsApp y teléfono ya son reales (+57 310 790 1380). Faltan confirmar el email (`info@grupocrear.com`, mientras el dominio es `.co`) y las URL reales de las redes sociales (M2).
   Si no existe alguna red, se quita.
 - **C3:** el proveedor para entregar los leads del formulario, y a qué correo deben llegar. Las opciones son Resend, SendGrid o SMTP; Netlify
   Forms ya no aplica. La API key va en `.env` en local y en un secreto de GitHub Actions. Añádela a la
@@ -121,7 +121,8 @@ y P6. Luego aplica C1 y M5 cuando tengas mis datos, y añade un chequeo de build
 encuentra `000 0000` o `573000000000`.
 
 ### Fase 2 — Conversión crítica
-- **C2:** el formulario inline de la home debe hacer `preventDefault` y POST a `/api/contacto`,
+- **C2 (resuelto a medias):** ambos formularios ya entregan por WhatsApp con `waCotizacion()`; el POST a `/api/contacto` queda para cuando exista un servicio de correo.
+  Requisito original: el formulario inline de la home debe hacer `preventDefault` y POST a `/api/contacto`,
   reutilizando la lógica de `ContactDialog`. Debe mostrar errores por campo, estado de envío y
   confirmación, y nunca dejar datos personales en la URL.
 - **C3:** el envío debe ser real con el proveedor que elija. Si falla, la API no responde 200 y el

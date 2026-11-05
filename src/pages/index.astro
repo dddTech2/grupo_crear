@@ -18,6 +18,10 @@ import { contacto, waBase, telLink, mailtoLink } from '../data/contacto';
 >
 
 
+  <!-- El primer pintado grande de la portada: que no espere a que el navegador lo descubra -->
+  <link slot="head" rel="preload" as="image" href="/posters/meteoro.webp" fetchpriority="high" />
+  <link slot="head" rel="preload" as="image" href="/media/rebranding-nexus-640.webp" fetchpriority="high" />
+
   <RocketCursor slot="cursor" />
 
   <!-- ═══════════════════════════════════════════════
@@ -27,7 +31,7 @@ import { contacto, waBase, telLink, mailtoLink } from '../data/contacto';
     <!-- Cielo estrellado: capa más profunda, se ve a través de la ventana del logo -->
     <StarField />
 
-    <div class="hero-glow pointer-events-none absolute w-[70vw] h-[70vw] max-w-[900px] max-h-[900px] rounded-full top-[-25%] right-[-15%] opacity-100" id="glow-bg" style="background: radial-gradient(circle, rgba(232,78,27,0.22), transparent 60%); filter: blur(40px);"></div>
+    <div class="hero-glow pointer-events-none absolute w-[70vw] h-[70vw] max-w-[900px] max-h-[900px] rounded-full top-[-25%] right-[-15%] opacity-100" id="glow-bg" style="background: radial-gradient(circle, rgba(232,78,27,0.22), transparent 60%);"></div>
 
     <!-- El Meteoro central (visible al inicio detrás de la máscara) -->
     <div class="absolute inset-0 z-10 flex items-center justify-center pointer-events-none opacity-100" id="meteor-container">
@@ -52,34 +56,31 @@ import { contacto, waBase, telLink, mailtoLink } from '../data/contacto';
     </svg>
 
     <!-- Collage Parallax de 5 tarjetas (visibles al inicio detrás de la máscara) -->
-    <div class="absolute inset-0 z-0 pointer-events-none overflow-hidden" id="collage-container" style="perspective: 1000px; transform-style: preserve-3d; filter: url(#chromatic-aberration);">
+    <div class="absolute inset-0 z-0 pointer-events-none overflow-hidden" id="collage-container" style="perspective: 1000px; transform-style: preserve-3d;">
       <!-- Tarjeta 1: Rebranding Nexus -->
       <div class="card-parallax absolute top-[20%] right-[18%] w-72 rounded-xl overflow-hidden shadow-2xl opacity-100"
            data-speed="-1.5" data-x="450" data-y="-350" data-rx="-25" data-ry="30" data-sk="-8">
-        <img src="/rebranding_nexus.webp" alt="Rebranding Nexus" class="w-full h-auto" />
+        <img src="/media/rebranding-nexus-640.webp" width="640" height="357" fetchpriority="high" decoding="async" alt="Rebranding Nexus" class="w-full h-auto" />
       </div>
 
       <!-- Tarjeta 2: Vista Mac -->
       <div class="card-parallax absolute bottom-[22%] right-[16%] w-36 rounded-xl overflow-hidden shadow-2xl opacity-100"
            data-speed="2.2" data-x="500" data-y="300" data-rx="25" data-ry="25" data-sk="8">
-        <video autoplay loop muted playsinline class="w-full h-auto" aria-hidden="true">
+        <video autoplay loop muted playsinline poster="/posters/diseno-web.webp" class="w-full h-auto" aria-hidden="true">
           <source data-src="/VistaMacCinematica_3.mp4" type="video/mp4" />
         </video>
       </div>
 
-      <!-- Tarjeta 3: Publicidad Exterior -->
+      <!-- Tarjeta 3: Exposición en el Museo de Memoria de Colombia -->
       <div class="card-parallax absolute bottom-[16%] left-[14%] w-80 rounded-xl overflow-hidden shadow-2xl opacity-100"
            data-speed="-1" data-x="-500" data-y="400" data-rx="30" data-ry="-25" data-sk="-8">
-        <video autoplay loop muted playsinline class="w-full h-auto" aria-hidden="true">
-          <!-- 480p: esta tarjeta mide 320 px (w-80); 854 px de ancho cubre retina -->
-          <source data-src="/Publicidad_pantallaedificio_cocacola_480.mp4" type="video/mp4" />
-        </video>
+        <img src="/media/exhibicion-museo-memoria-640.webp" width="640" height="427" decoding="async" alt="Exposición en gran formato en el Museo de Memoria de Colombia" class="w-full h-auto" />
       </div>
 
       <!-- Tarjeta 4: Gran Formato -->
       <div class="card-parallax absolute top-[22%] left-[6%] w-64 rounded-xl overflow-hidden shadow-2xl opacity-100"
            data-speed="1.2" data-x="-450" data-y="-300" data-rx="-25" data-ry="-30" data-sk="8">
-        <video autoplay loop muted playsinline class="w-full h-auto" aria-hidden="true">
+        <video autoplay loop muted playsinline poster="/posters/gran-formato.webp" class="w-full h-auto" aria-hidden="true">
           <source data-src="/Impresion-a-gran-formato_naranja_3.mp4" type="video/mp4" />
         </video>
       </div>
@@ -87,7 +88,7 @@ import { contacto, waBase, telLink, mailtoLink } from '../data/contacto';
       <!-- Tarjeta 5: Alternativa Naranja 3D -->
       <div class="card-parallax absolute top-[38%] left-[29%] w-44 h-44 rounded-full overflow-hidden shadow-2xl opacity-100"
            data-speed="-0.8" data-x="-600" data-y="-50" data-rx="-20" data-ry="-20" data-sk="4">
-        <img src="/alternativa_naranja3d.webp" alt="Alternativa Naranja 3D" class="w-full h-full object-cover" />
+        <img src="/media/alternativa-naranja-3d-640.webp" width="640" height="360" decoding="async" alt="Alternativa Naranja 3D" class="w-full h-full object-cover" />
       </div>
     </div>
 
@@ -99,16 +100,11 @@ import { contacto, waBase, telLink, mailtoLink } from '../data/contacto';
       <p> sin aria-hidden: Google lo indexa como texto descriptivo de servicio.
       No compite con el <h1> del segundo fold ("Hacemos que tu marca haga ruido").
       z-index:35 → encima del LogoHeroMask (z-20) y del scroll-indicator (z-30).
-      Estado inicial: opacity:0 + translateY(16px).
-      GSAP controla BOTH entrada (fade-up tras intro) y salida (fade-up al scroll).
-    -->
-    <!--
-      aria-label: cuando JS reemplaza innerHTML con <span> por letra,
-      los lectores de pantalla leen este atributo en lugar de los spans.
+      Visible desde el primer pintado (el preloader lo tapa mientras carga);
+      GSAP controla BOTH entrada (por palabras) y salida (fade-up al scroll).
     -->
     <p
       id="hero-visual-tagline"
-      aria-label="Agencia de publicidad y producción gráfica para marcas de Colombia que quieren sobresalir."
       style="
         position:absolute;
         bottom:clamp(3rem,7vh,5.5rem);
@@ -123,7 +119,6 @@ import { contacto, waBase, telLink, mailtoLink } from '../data/contacto';
         line-height:1.3;
         margin:0;
         max-width:520px;
-        opacity:0;
         pointer-events:none;
       "
     >
@@ -340,7 +335,7 @@ import { contacto, waBase, telLink, mailtoLink } from '../data/contacto';
         <!-- Proyecto A — Rebranding Nexus (imagen real) -->
         <a href="#cto" class="proj a">
           <div class="proj-media">
-            <img src="/rebranding_nexus.webp" alt="Rebranding Nexus — caso de estudio" loading="lazy" />
+            <img src="/media/rebranding-nexus-1280.webp" srcset="/media/rebranding-nexus-640.webp 640w, /media/rebranding-nexus-1280.webp 1280w" sizes="(max-width: 1023px) 100vw, 50vw" width="1280" height="714" alt="Rebranding Nexus — caso de estudio" loading="lazy" decoding="async" />
           </div>
           <div class="arrow" aria-hidden="true">
             <svg viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H8M17 7v9"/></svg>
@@ -366,7 +361,7 @@ import { contacto, waBase, telLink, mailtoLink } from '../data/contacto';
         <!-- Proyecto C — 3D naranja -->
         <a href="#cto" class="proj c">
           <div class="proj-media">
-            <img src="/alternativa_naranja3d.webp" alt="Modelado 3D naranja" loading="lazy" />
+            <img src="/media/alternativa-naranja-3d-1000.webp" srcset="/media/alternativa-naranja-3d-640.webp 640w, /media/alternativa-naranja-3d-1000.webp 1000w" sizes="(max-width: 1023px) 100vw, 50vw" width="1000" height="562" alt="Modelado 3D naranja" loading="lazy" decoding="async" />
           </div>
           <div class="arrow" aria-hidden="true">
             <svg viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H8M17 7v9"/></svg>
@@ -376,18 +371,17 @@ import { contacto, waBase, telLink, mailtoLink } from '../data/contacto';
           <div class="pmeta">Campaña Digital · 2024</div>
         </a>
 
-        <!-- Proyecto D — Publicidad exterior video -->
+        <!-- Proyecto D — Exposición en el Museo de Memoria de Colombia -->
         <a href="#cto" class="proj d">
           <div class="proj-media">
-            <!-- 720p: la tarjeta de portafolio es mayor (~460 px) que la del collage -->
-            <video data-src="/Publicidad_pantallaedificio_cocacola_720.mp4" autoplay loop muted playsinline aria-hidden="true"></video>
+            <img src="/media/exhibicion-museo-memoria-1200.webp" srcset="/media/exhibicion-museo-memoria-640.webp 640w, /media/exhibicion-museo-memoria-1200.webp 1200w" sizes="(max-width: 1023px) 100vw, 50vw" width="1200" height="800" alt="Módulos y paneles de la exposición en el Museo de Memoria de Colombia" loading="lazy" decoding="async" />
           </div>
           <div class="arrow" aria-hidden="true">
             <svg viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H8M17 7v9"/></svg>
           </div>
-          <div class="ptag"><b></b>Publicidad Exterior</div>
-          <h4>Pantalla Edificio</h4>
-          <div class="pmeta">Consumo masivo · 2024</div>
+          <div class="ptag"><b></b>Gran Formato</div>
+          <h4>Museo de Memoria de Colombia</h4>
+          <div class="pmeta">Módulos y paneles de exposición · Bogotá</div>
         </a>
 
         <!-- Proyecto E — SEO/Web -->
@@ -519,7 +513,7 @@ import { contacto, waBase, telLink, mailtoLink } from '../data/contacto';
             </div>
             <div id="inline-response" style="display:none;margin-bottom:12px;padding:10px 14px;border-radius:6px;font-size:14px;" aria-live="assertive"></div>
             <button class="submit-btn" id="ci-submit" type="submit">
-              <span id="ci-submit-text">Enviar cotización</span>
+              <span id="ci-submit-text">Enviar por WhatsApp</span>
               <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
             </button>
           </form>
@@ -540,9 +534,29 @@ import { contacto, waBase, telLink, mailtoLink } from '../data/contacto';
 
 <script>
   import { gsap, ScrollTrigger } from '../utils/gsap-config';
-  import { initStory } from '../scripts/story';
+  import { initStory, nextTask } from '../scripts/story';
+  import { waCotizacion } from '../data/contacto';
+
+  // El refresh de 'load' repetía todas las mediciones: solo hace falta si la página cambió de alto
+  ScrollTrigger.config({ autoRefreshEvents: 'visibilitychange,DOMContentLoaded' });
 
   const setChapter = (name: string) => (window as any).__setChapter?.(name);
+
+  /**
+   * Llama a `run` una sola vez: con la primera señal del usuario o, si se indica, pasados `ms`.
+   * Lo costoso del hero se monta así, para que la portada pinte y responda antes.
+   */
+  function onFirstEngagement(run: () => void, ms?: number) {
+    const EVENTS = ['wheel', 'touchstart', 'pointerdown', 'keydown', 'scroll'];
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    const fire = () => {
+      EVENTS.forEach((e) => window.removeEventListener(e, fire));
+      clearTimeout(timer);
+      run();
+    };
+    EVENTS.forEach((e) => window.addEventListener(e, fire, { passive: true }));
+    if (ms !== undefined) timer = setTimeout(fire, ms);
+  }
 
   // Mismo sistema que Podium:
   // • Sin pin — la sección sale de pantalla con scroll natural
@@ -552,7 +566,6 @@ import { contacto, waBase, telLink, mailtoLink } from '../data/contacto';
   // • ease-expo en textos = cubic-bezier(.16,1,.3,1) idéntico a Podium
   window.addEventListener('load:complete', () => {
     const preloader   = document.getElementById('preloader');
-    const logoOverlay = document.getElementById('logo-hero-overlay');
     const nav         = document.getElementById('nav');
     const navElements = document.querySelectorAll('#nav-brand, #nav .menu li, #burger');
     const taglineEl   = document.getElementById('hero-visual-tagline');
@@ -562,138 +575,127 @@ import { contacto, waBase, telLink, mailtoLink } from '../data/contacto';
     // esa función lanza ReferenceError y corta la cadena de __checkAllLoaded.
     const prefersRM = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    // ── Activar videos del collage — diferidos para no competir con el intro ──
-    document.querySelectorAll<HTMLSourceElement>('#collage-container source[data-src]').forEach((s) => {
-      s.src = s.dataset.src!;
-      (s.parentElement as HTMLVideoElement | null)?.load();
-    });
+    // ── Vídeos del hero: pósters al entrar y vídeo cuando hace falta ─────────
+    // Pesan 3 MB y detrás de la máscara casi no se ven hasta hacer scroll. En móvil
+    // o con ahorro de datos esperan al primer gesto; en escritorio, a 2,5 s.
+    const loadHeroVideos = () => {
+      document.querySelectorAll<HTMLSourceElement>('#hero-visual source[data-src]').forEach((s) => {
+        const v = s.parentElement as HTMLVideoElement | null;
+        s.src = s.dataset.src!;
+        if (v) { v.preload = 'auto'; v.load(); }
+      });
+    };
+    const lightDevice = window.matchMedia('(max-width: 768px)').matches || (navigator as any).connection?.saveData;
+    onFirstEngagement(loadHeroVideos, lightDevice ? undefined : 2500);
 
-    // Revelar el overlay del canvas (detrás del preloader) e inicializar estados de la UI
-    if (logoOverlay) {
-      gsap.set(logoOverlay, { opacity: 1 });
-    }
     if (nav) {
       gsap.set(nav, { opacity: 1 });
       nav.style.pointerEvents = 'auto'; // Habilitar clics
     }
 
-    // ── Timeline de entrada cinemático coordinado ───────────────────────────
-    const tl = gsap.timeline({
-      onComplete: () => {
-        if (preloader) {
-          preloader.style.display = 'none';
-        }
-        document.documentElement.classList.remove('loading');
-        // Despachar intro:complete para inicializar el sistema de scroll
-        window.dispatchEvent(new CustomEvent('intro:complete'));
-      }
+    // ── Timeline de entrada ─────────────────────────────────────────────────
+    // La escena ya está pintada debajo del preloader (collage, máscara y tagline),
+    // así que esto solo la destapa y le da vida: corto para no retener a nadie.
+    const introTl = gsap.timeline({
+      onComplete: () => window.dispatchEvent(new CustomEvent('intro:complete')),
     });
 
     // 1. Desvanecer el preloader (Capa 1)
     if (preloader) {
-      tl.to(preloader, {
+      introTl.to(preloader, {
         opacity: 0,
-        duration: 1.5,
-        ease: 'expo.out',
+        duration: 0.5,
+        ease: 'power2.out',
+        onComplete: () => { preloader.style.display = 'none'; },
       }, 0);
     }
+    // Tras la entrada del nav: al quitar .loading su estado final se fuerza con !important
+    introTl.call(() => document.documentElement.classList.remove('loading'), undefined, 0.85);
 
     // 2. Encendido progresivo del cielo estrellado (StarField)
-    // Solapamiento: inicia a los 1.0s (0.5s antes de que termine el preloader)
     const stars = (window as any).__stars;
     if (stars && !prefersRM) {
-      tl.to(stars, { alpha: 0.55, duration: 3.5, ease: 'expo.out' }, 1.0);
+      introTl.to(stars, { alpha: 0.55, duration: 1.6, ease: 'expo.out' }, 0.2);
     }
 
     // 3. Stagger en cascada para los elementos de navegación (Slide down + Fade-in)
     if (navElements.length) {
-      tl.fromTo(navElements,
+      introTl.fromTo(navElements,
         { opacity: 0, y: -25 },
-        { opacity: 1, y: 0, duration: 1.5, ease: 'expo.out', stagger: 0.08 },
-        1.0
+        { opacity: 1, y: 0, duration: 0.5, ease: 'expo.out', stagger: 0.03 },
+        0.1
       );
     }
 
-    // 4. Stagger para tarjetas, meteoro y scroll indicator (Slide up + Scale + Fade-in)
-    tl.fromTo(['#collage-container', '#meteor-container', '#scroll-indicator'],
-      { opacity: 0, y: 35, scale: 0.95 },
-      { opacity: 1, y: 0, scale: 1.0, duration: 2.0, ease: 'expo.out', stagger: 0.15 },
-      1.2
+    // 4. Meteoro y scroll indicator (Slide up + Fade-in)
+    introTl.fromTo('#meteor-container', { y: 35 }, { y: 0, duration: 1.0, ease: 'expo.out' }, 0.15);
+    introTl.fromTo('#scroll-indicator',
+      { opacity: 0, y: 35 },
+      { opacity: 1, y: 0, duration: 1.0, ease: 'expo.out' },
+      0.25
     );
 
-    // 5. Stagger de letras del tagline
+    // 5. Tagline palabra por palabra
     //
-    // splitTaglineChars():
-    //   Lee el HTML del <p> (respetando <br>), reemplaza su contenido con un
-    //   <span class="tchar" aria-hidden> por cada letra no-espaciada.
-    //   Los espacios quedan como TextNodes simples (no afectan el kerning).
-    //   Los <br> se recrean con aria-hidden para no interferir con el aria-label del <p>.
-    //   Devuelve el array de spans animables (.tchar).
-    function splitTaglineChars(el: HTMLElement): HTMLElement[] {
+    // Por palabras y no por letras: 14 tweens en lugar de 84 y ningún aria-hidden,
+    // porque cada palabra sigue siendo texto normal para lectores de pantalla.
+    function splitTaglineWords(el: HTMLElement): HTMLElement[] {
       const lines = el.innerHTML.split(/<br\b[^>]*>/i);
       el.innerHTML = '';
-      const chars: HTMLElement[] = [];
+      const words: HTMLElement[] = [];
       lines.forEach((line, li) => {
-        const text = line.replace(/<[^>]*>/g, ''); // limpia tags residuales
-        [...text].forEach(char => {
-          if (char === ' ') {
-            el.appendChild(document.createTextNode(' '));
-          } else {
-            const s = document.createElement('span');
-            s.className    = 'tchar';
-            s.textContent  = char;
-            s.style.cssText = 'display:inline-block;opacity:0;';
-            s.setAttribute('aria-hidden', 'true');
-            el.appendChild(s);
-            chars.push(s);
-          }
+        line.replace(/<[^>]*>/g, '').trim().split(/\s+/).forEach((word, wi) => {
+          if (wi) el.appendChild(document.createTextNode(' '));
+          const s = document.createElement('span');
+          s.className = 'tword';
+          s.textContent = word;
+          s.style.display = 'inline-block';
+          el.appendChild(s);
+          words.push(s);
         });
-        if (li < lines.length - 1) {
-          const br = document.createElement('br');
-          br.setAttribute('aria-hidden', 'true');
-          el.appendChild(br);
-        }
+        if (li < lines.length - 1) el.appendChild(document.createElement('br'));
       });
-      return chars;
+      return words;
     }
 
-    if (taglineEl) {
-      taglineEl.style.opacity = '1';
-      const taglineChars = splitTaglineChars(taglineEl);
-
-      if (prefersRM || !taglineChars.length) {
-        taglineChars.forEach(c => (c.style.opacity = '1'));
-      } else {
-        tl.fromTo(taglineChars,
-          { opacity: 0, y: 6 },
-          {
-            opacity: 1,
-            y: 0,
-            duration: 1.0,
-            ease: 'power3.out',
-            stagger: { each: 0.04, from: 'random' },
-          },
-          1.4
-        );
-      }
+    if (taglineEl && !prefersRM) {
+      introTl.fromTo(splitTaglineWords(taglineEl),
+        { opacity: 0, y: 6 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.7,
+          ease: 'power3.out',
+          stagger: { each: 0.04, from: 'random' },
+        },
+        0.2
+      );
     }
 
-    // ── Hero-content: texto del segundo fold con expo easing ────────────────
-    // Usa la misma curva que Podium's @keyframes reveal / --ease-out-expo.
-    gsap.timeline({
-      scrollTrigger: {
-        trigger: '#hero-content',
-        start: 'top 85%',
-        toggleActions: 'play none none none',
-      },
-    })
-    .to('#hero-title span span', { opacity:1, y:0, duration:.9, stagger:.13, ease:'power4.out' })
-    .to(['#hero-lead','#hero-actions'], { opacity:1, y:0, duration:.7, stagger:.1, ease:'power4.out' }, '-=0.5');
+    // ── Sistema de scroll ───────────────────────────────────────────────────
+    // Se monta al terminar la entrada, o antes si el usuario ya quiere moverse.
+    // En móvil espera más: quien solo mira la portada no paga este trabajo.
+    const startScrollSystem = () => {
+      introTl.progress(1);
+      initScrollSystem();
+    };
+    if (window.scrollY > 0) startScrollSystem();
+    else onFirstEngagement(startScrollSystem, lightDevice ? 5000 : 2200);
 
-    // ── Sistema de scroll del hero ──────────────────────────────────────────
-    initScrollSystem();
+    async function initScrollSystem() {
+      // ── Hero-content: texto del segundo fold con expo easing ──────────────
+      // Usa la misma curva que Podium's @keyframes reveal / --ease-out-expo.
+      gsap.timeline({
+        scrollTrigger: {
+          trigger: '#hero-content',
+          start: 'top 85%',
+          toggleActions: 'play none none none',
+        },
+      })
+      .to('#hero-title span span', { opacity:1, y:0, duration:.9, stagger:.13, ease:'power4.out' })
+      .to(['#hero-lead','#hero-actions'], { opacity:1, y:0, duration:.7, stagger:.1, ease:'power4.out' }, '-=0.5');
+      await nextTask();
 
-    function initScrollSystem() {
       const cards       = gsap.utils.toArray<HTMLElement>('.card-parallax');
       const redOffset   = document.getElementById('red-offset');
       const blueOffset  = document.getElementById('blue-offset');
@@ -702,6 +704,17 @@ import { contacto, waBase, telLink, mailtoLink } from '../data/contacto';
       const logoOverlay = document.getElementById('logo-hero-overlay') as HTMLElement  | null;
       const video       = document.getElementById('meteor-video')      as HTMLVideoElement | null;
       const inner       = document.getElementById('meteor-inner')      as HTMLElement | null;
+      const collage     = document.getElementById('collage-container');
+
+      // El filtro SVG repinta toda la capa con cada frame de vídeo: solo en escritorio
+      // y solo durante el recorrido del hero, nunca con la portada en reposo.
+      const useAberration = !prefersRM && window.matchMedia('(min-width: 769px)').matches;
+      let aberrationOn = false;
+      const setAberration = (on: boolean) => {
+        if (on === aberrationOn || !collage) return;
+        aberrationOn = on;
+        collage.style.filter = on ? 'url(#chromatic-aberration)' : 'none';
+      };
 
       // Aberración cromática reactiva a velocidad de scroll (Lenis velocity → feOffset)
       //
@@ -735,8 +748,8 @@ import { contacto, waBase, telLink, mailtoLink } from '../data/contacto';
         blueOffset?.setAttribute('dx', '0');
       };
 
-      if (prefersRM) {
-        // Con reduced-motion el filtro se queda en reposo: nada que animar.
+      if (!useAberration) {
+        // Sin el filtro aplicado no hay nada que animar.
         resetAberration();
       } else {
         gsap.ticker.add(updateAberration);
@@ -752,12 +765,6 @@ import { contacto, waBase, telLink, mailtoLink } from '../data/contacto';
       }
 
       setChapter('Ignición');
-      gsap.set('#scroll-indicator', { opacity: 1 });
-      gsap.set('#meteor-container', { scale: 1.8 });
-
-      // El overlay empieza en opacity:0 para evitar flash antes del intro.
-      // Lo ponemos a 1 inmediatamente aquí — el intro ya terminó.
-      if (logoOverlay) gsap.set(logoOverlay, { opacity: 1 });
 
       const vw = window.innerWidth;
       const vh = window.innerHeight;
@@ -789,6 +796,7 @@ import { contacto, waBase, telLink, mailtoLink } from '../data/contacto';
           invalidateOnRefresh: true,
           onUpdate(self) {
             setChapter(self.progress < 0.5 ? 'Ignición' : 'Despegue');
+            if (useAberration) setAberration(self.progress > 0.001 && self.progress < 0.999);
           },
           onRefresh() {
             const w = window.innerWidth;
@@ -799,6 +807,8 @@ import { contacto, waBase, telLink, mailtoLink } from '../data/contacto';
           },
         },
       });
+
+      await nextTask();
 
       // ── Cielo estrellado: Ignición enciende, Despegue salta a warp ──
       //   t 0.0→1.0  alpha 0.55→1 (las estrellas ganan presencia tras el logo)
@@ -851,6 +861,8 @@ import { contacto, waBase, telLink, mailtoLink } from '../data/contacto';
         }, 0);
       }
 
+      await nextTask();
+
       // ── Fase A: Logo zoom (t:0 → 1.0) ────────────────────────────────────
       const origin = `${vw / 2} ${vh / 2}`;
       if (logoGroup) {
@@ -894,26 +906,26 @@ import { contacto, waBase, telLink, mailtoLink } from '../data/contacto';
 
         fromTo con opacity:1 explícito → scroll-back devuelve todas las letras. ✅
         stagger from:'random' → intercalado natural dentro del scrub del tl.      ✅
-        each:0.005 × ~60 chars + duration:0.22 ≈ 0.52 tl-time (26% del scroll).  ✅
+        each:0.02 × 14 palabras + duration:0.22 ≈ 0.5 tl-time (25% del scroll).  ✅
       */
-      const tChars = document.querySelectorAll<HTMLElement>('#hero-visual-tagline .tchar');
+      const tChars = document.querySelectorAll<HTMLElement>('#hero-visual-tagline .tword');
       if (tChars.length && !prefersRM) {
         tl.fromTo(tChars,
           { opacity: 1 },
           {
             opacity: 0,
             ease: 'none',
-            stagger: { each: 0.005, from: 'random' },
+            stagger: { each: 0.02, from: 'random' },
             duration: 0.22,
           },
           0,
         );
       }
 
-      // Header: Lightfall es oscuro (navy) → logo y links blancos son legibles sin ajustes.
+      await nextTask();
 
       // ── Fase B: Dispersión cards + meteor (t:1.0 → 2.0) ──────────────────
-      cards.forEach((card) => {
+      for (const card of cards) {
         const tx = parseFloat(card.dataset.x  ?? '0');
         const ty = parseFloat(card.dataset.y  ?? '0');
         const rx = parseFloat(card.dataset.rx ?? '0');
@@ -935,32 +947,46 @@ import { contacto, waBase, telLink, mailtoLink } from '../data/contacto';
           },
           1.0,
         );
-      });
+        await nextTask();
+      }
 
-      if (redOffset && blueOffset) {
+      if (useAberration && redOffset && blueOffset) {
         tl.fromTo(redOffset,  { attr:{dx:0} }, { attr:{dx:-12}, ease:'power2.in', duration:1.0 }, 1.0);
         tl.fromTo(blueOffset, { attr:{dx:0} }, { attr:{dx: 12}, ease:'power2.in', duration:1.0 }, 1.0);
       }
 
       tl.fromTo('#meteor-container',
-        { scale:1.8, opacity:1 },
-        { scale:1.8, opacity:0, ease:'power2.in', duration:1.0 },
+        { opacity:1 },
+        { opacity:0, ease:'power2.in', duration:1.0, immediateRender:false },
         1.0,
       );
 
       // Capítulos 2-5: se crean después del pin para medir con el pin-spacer ya puesto
-      initStory();
+      await nextTask();
+      await initStory();
+      await nextTask();
       // Los triggers de capítulo del rail/HUD (Layout) se crean ahora, con los pins ya puestos
       window.dispatchEvent(new CustomEvent('story:ready'));
+      await nextTask();
       ScrollTrigger.sort();
       ScrollTrigger.refresh();
+      refreshIfResized();
     }
   });
+
+  // Sustituye al refresh automático de 'load': solo si las imágenes cambiaron el alto de la página
+  let measuredHeight = 0;
+  function refreshIfResized() {
+    const height = document.documentElement.scrollHeight;
+    if (measuredHeight && height !== measuredHeight) ScrollTrigger.refresh();
+    measuredHeight = document.documentElement.scrollHeight;
+  }
+  window.addEventListener('load', refreshIfResized);
 
   // Lazy-load portfolio videos: only request the file when the card enters the viewport.
   // rootMargin:'300px' starts the fetch ~300px before the card is visible,
   // so the video is ready to play by the time the user scrolls to it.
-  const lazyVideos = document.querySelectorAll<HTMLVideoElement>('video[data-src]');
+  const lazyVideos = document.querySelectorAll<HTMLVideoElement>('#port video[data-src]');
   if (lazyVideos.length) {
     const vidObs = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
@@ -973,6 +999,36 @@ import { contacto, waBase, telLink, mailtoLink } from '../data/contacto';
     }, { rootMargin: '300px' });
     lazyVideos.forEach((v) => vidObs.observe(v));
   }
+
+  // Formulario de cotización: se entrega por WhatsApp, con los datos ya redactados
+  const quoteForm = document.getElementById('contact-form-inline') as HTMLFormElement | null;
+  quoteForm?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    if (!quoteForm.reportValidity()) return;
+    const data  = new FormData(quoteForm);
+    const value = (name: string) => String(data.get(name) ?? '').trim();
+    const url = waCotizacion({
+      Nombre:   value('nombre'),
+      Empresa:  value('empresa'),
+      Servicio: value('servicio'),
+      Email:    value('email'),
+      'Teléfono': value('telefono'),
+      Mensaje:  value('mensaje'),
+    });
+    window.open(url, '_blank', 'noopener');
+
+    const box = document.getElementById('inline-response');
+    if (!box) return;
+    box.style.cssText += ';display:block;background:rgba(27,232,100,.12);border:1px solid rgba(27,232,100,.3);color:#6effa0';
+    box.textContent = 'Te abrimos WhatsApp con tu solicitud: solo falta tocar enviar. ';
+    const again = document.createElement('a');
+    again.href = url;
+    again.target = '_blank';
+    again.rel = 'noopener noreferrer';
+    again.textContent = '¿No se abrió? Ábrelo aquí.';
+    again.style.cssText = 'color:inherit;text-decoration:underline';
+    box.append(again);
+  });
 
   // Los vídeos en loop siguen decodificando aunque no se vean: pausarlos fuera de pantalla
   const loopVideos = document.querySelectorAll<HTMLVideoElement>('main video[autoplay]');
@@ -990,8 +1046,6 @@ import { contacto, waBase, telLink, mailtoLink } from '../data/contacto';
 
 <style>
   /* Ocultar elementos del hero por defecto para evitar FOUC */
-  #collage-container,
-  #meteor-container,
   #scroll-indicator {
     opacity: 0;
     pointer-events: none;

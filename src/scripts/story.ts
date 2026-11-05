@@ -86,13 +86,19 @@ function injectChapterWords(): HTMLElement[] {
   return words;
 }
 
-export function initStory() {
+/** Cede el hilo principal entre tramos del montaje: varias tareas cortas en vez de una larga. */
+export function nextTask(): Promise<void> {
+  const scheduler = (globalThis as any).scheduler;
+  return scheduler?.yield ? scheduler.yield() : new Promise((resolve) => setTimeout(resolve, 0));
+}
+
+export async function initStory() {
   const words = injectChapterWords();
   const mm = gsap.matchMedia();
 
-  mm.add(MOTION_OK, () => {
-    // ── Palabra del capítulo: cruza la sección en sentido contrario al scroll ─
-    words.forEach((w) => {
+  // ── Palabra del capítulo: cruza la sección en sentido contrario al scroll ─
+  for (const w of words) {
+    mm.add(MOTION_OK, () => {
       gsap.fromTo(w,
         { xPercent: 6 },
         {
@@ -100,9 +106,12 @@ export function initStory() {
           scrollTrigger: { trigger: w.parentElement, start: 'top bottom', end: 'bottom top', scrub: true },
         });
     });
+    await nextTask();
+  }
 
-    // ── Titulares de sección: líneas que suben desde su máscara ─────────────
-    gsap.utils.toArray<HTMLElement>('section h2.lead').forEach((h) => {
+  // ── Titulares de sección: líneas que suben desde su máscara ─────────────
+  for (const h of gsap.utils.toArray<HTMLElement>('section h2.lead')) {
+    mm.add(MOTION_OK, () => {
       const lines = splitLines(h);
       gsap.fromTo(lines,
         { yPercent: 105 },
@@ -111,7 +120,10 @@ export function initStory() {
           scrollTrigger: { trigger: h, start: 'top 85%', once: true },
         });
     });
+    await nextTask();
+  }
 
+  mm.add(MOTION_OK, () => {
     // ── 3 · Órbita: filas en cascada ────────────────────────────────────────
     gsap.set('#serv .srow', { opacity: 0, y: 48 });
     ScrollTrigger.batch('#serv .srow', {
@@ -119,7 +131,10 @@ export function initStory() {
       once: true,
       onEnter: (rows) => gsap.to(rows, { opacity: 1, y: 0, duration: 1, ease: EASE, stagger: 0.09 }),
     });
+  });
+  await nextTask();
 
+  mm.add(MOTION_OK, () => {
     // ── 4 · Tripulación: el marco del estudio se abre como una escotilla ───
     const frame = document.querySelector<HTMLElement>('#nos .nos-frame');
     if (frame) {
@@ -137,7 +152,10 @@ export function initStory() {
     const yr = document.querySelector<HTMLElement>('#nos .yr');
     if (yr) countUp(yr, yr);
     document.querySelectorAll<HTMLElement>('#nos .nos-stat b').forEach((b) => countUp(b, b));
+  });
+  await nextTask();
 
+  mm.add(MOTION_OK, () => {
     // ── 7 · Aterrizaje: "CREAR" atraviesa el fondo + el cohete se posa ──────
     gsap.fromTo('#cto .cto-huge',
       { xPercent: 18 },
@@ -161,6 +179,8 @@ export function initStory() {
       if (dust)  tl.fromTo(dust, { scaleX: 0, opacity: 0 }, { scaleX: 1, opacity: 1, ease: 'power2.out', duration: 0.25 }, 0.85);
     }
   });
+
+  await nextTask();
 
   // ── Órbita (escritorio): el cohete recorre la elipse y deja su estela ─────
   mm.add(`(min-width: 980px) and ${MOTION_OK}`, () => {
@@ -189,6 +209,8 @@ export function initStory() {
 
     return () => holder.replaceChildren();
   });
+
+  await nextTask();
 
   // ── 5 · Planetas (escritorio): viaje horizontal pinneado ──────────────────
   mm.add(`(min-width: 1024px) and ${MOTION_OK}`, () => {
@@ -234,27 +256,23 @@ export function initStory() {
     return () => port.classList.remove('port-h');
   });
 
+  await nextTask();
+
   // ── 5 · Planetas (móvil/tablet): reveal vertical por tarjeta ──────────────
-  mm.add(`(max-width: 1023px) and ${MOTION_OK}`, () => {
-    gsap.utils.toArray<HTMLElement>('#port .proj').forEach((card) => {
+  for (const card of gsap.utils.toArray<HTMLElement>('#port .proj')) {
+    mm.add(`(max-width: 1023px) and ${MOTION_OK}`, () => {
       gsap.fromTo(card,
         { clipPath: 'inset(14% 10% 14% 10% round 6px)', scale: 0.94, opacity: 0.35 },
         {
           clipPath: 'inset(0% 0% 0% 0% round 6px)', scale: 1, opacity: 1, ease: 'none',
           scrollTrigger: { trigger: card, start: 'top 98%', end: 'top 55%', scrub: 0.6 },
         });
-      const media = card.querySelector<HTMLElement>('.proj-media');
-      if (media) {
-        gsap.fromTo(media,
-          { yPercent: -6 },
-          {
-            yPercent: 6, ease: 'none',
-            scrollTrigger: { trigger: card, start: 'top bottom', end: 'bottom top', scrub: true },
-          });
-      }
     });
-  });
+    await nextTask();
+  }
 
   // Las fuentes cambian la altura de los titulares → recalcular posiciones
-  document.fonts?.ready.then(() => ScrollTrigger.refresh());
+  if (document.fonts && document.fonts.status !== 'loaded') {
+    document.fonts.ready.then(() => ScrollTrigger.refresh());
+  }
 }

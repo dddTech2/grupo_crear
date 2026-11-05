@@ -46,20 +46,27 @@ try {
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <link rel="icon" href="/favicon.ico" sizes="48x48" />
   <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Sofia+Sans:ital,wght@0,1..1000;1,1..1000&family=Sofia+Sans+Condensed:wght@1..1000&display=swap" rel="stylesheet" />
+  <!-- Fuentes desde el propio dominio: Google Fonts bloqueaba el primer render ~750 ms en móvil -->
+  <link rel="preload" href="/fonts/sofia-sans.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="/fonts/sofia-sans-condensed.woff2" as="font" type="font/woff2" crossorigin />
+  <style is:inline>
+    @font-face{font-family:'Sofia Sans';font-style:normal;font-weight:1 1000;font-display:swap;src:url(/fonts/sofia-sans.woff2) format('woff2')}
+    @font-face{font-family:'Sofia Sans';font-style:italic;font-weight:1 1000;font-display:swap;src:url(/fonts/sofia-sans-italic.woff2) format('woff2')}
+    @font-face{font-family:'Sofia Sans Condensed';font-style:normal;font-weight:1 1000;font-display:swap;src:url(/fonts/sofia-sans-condensed.woff2) format('woff2')}
+  </style>
+
+  <slot name="head" />
 
   <!-- Coordinación de carga anticipada -->
   <script is:inline>
     window.__sceneReady = false;
-    window.__windowLoaded = false;
+    window.__domReady = false;
     
     // Temporizador de respaldo para evitar bloqueos
     window.__preloaderTimeout = setTimeout(() => {
       console.warn("Preloader timeout reached. Forcing load state.");
       window.__sceneReady = true;
-      window.__windowLoaded = true;
+      window.__domReady = true;
       if (window.__checkAllLoaded) window.__checkAllLoaded();
     }, 4500);
 
@@ -68,8 +75,10 @@ try {
       if (window.__checkAllLoaded) window.__checkAllLoaded();
     }, { once: true });
 
-    window.addEventListener('load', () => {
-      window.__windowLoaded = true;
+    // DOMContentLoaded (todos los módulos ya corrieron) y no 'load': este último
+    // espera imágenes y vídeos, y dejaba la portada tapada varios segundos en móvil.
+    document.addEventListener('DOMContentLoaded', () => {
+      window.__domReady = true;
       if (window.__checkAllLoaded) window.__checkAllLoaded();
     }, { once: true });
   </script>
@@ -97,6 +106,12 @@ try {
       to  {transform:scale(1.06) translate(-2%,3%);opacity:1}
     }
     #glow-bg{animation:glow-breathe 9s ease-in-out infinite alternate}
+    /* En móvil, el halo del trazo del logo y el pulso del brillo cuestan más de lo que aportan */
+    @media (max-width:768px){
+      #glow-bg{animation:none}
+      #preloader g[filter],#logo-stroke-group g[filter]{filter:none}
+      #scroll-indicator{display:none} /* se monta sobre el tagline */
+    }
     ::selection{background:var(--n);color:#fff}
     html{scroll-behavior:auto;scrollbar-gutter:stable}
     html.loading{overflow:hidden}
@@ -429,7 +444,7 @@ try {
     <div
       id="preloader"
       aria-label="Cargando"
-      style="position:fixed;inset:0;background:radial-gradient(circle at 50% 0%, #002255 0%, #001433 75%);z-index:99999999;transition:opacity 1.5s cubic-bezier(0.16, 1, 0.3, 1);opacity:1;pointer-events:auto;overflow:hidden;"
+      style="position:fixed;inset:0;background:radial-gradient(circle at 50% 0%, #002255 0%, #001433 75%);z-index:99999999;opacity:1;pointer-events:auto;overflow:hidden;"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -724,7 +739,8 @@ try {
   <!-- Script de validación final para ocultar preloader -->
   <script is:inline>
     window.__checkAllLoaded = function() {
-      if (window.__windowLoaded && window.__sceneReady) {
+      if (window.__domReady && window.__sceneReady && !window.__loadFired) {
+        window.__loadFired = true;
         if (window.__preloaderTimeout) clearTimeout(window.__preloaderTimeout);
         window.dispatchEvent(new CustomEvent('load:complete'));
         if (!document.getElementById('preloader') && !document.getElementById('intro-mask')) {

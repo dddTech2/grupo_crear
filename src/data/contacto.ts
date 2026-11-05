@@ -15,7 +15,7 @@
 export interface Contacto {
   /** Número en formato E.164 sin '+' ni espacios, como lo exige wa.me */
   whatsapp: string;
-  /** Teléfono fijo en formato E.164, para href="tel:" */
+  /** Teléfono en formato E.164, para href="tel:" */
   telefono: string;
   /** Etiqueta legible del teléfono, para mostrar en pantalla */
   telefonoDisplay: string;
@@ -26,12 +26,10 @@ export interface Contacto {
   paisCodigo: string;
 }
 
-// ⚠️ PENDIENTE: los tres primeros valores son marcadores de posición.
-// Reemplazar por los datos reales antes de publicar.
 export const contacto: Contacto = {
-  whatsapp: '573000000000',
-  telefono: '+576010000000',
-  telefonoDisplay: '(601) 000 0000',
+  whatsapp: '573107901380',
+  telefono: '+573107901380',
+  telefonoDisplay: '310 790 1380',
   email: 'info@grupocrear.com',
   ciudad: 'Bogotá',
   pais: 'Colombia',
@@ -49,6 +47,17 @@ export const waBase = `https://wa.me/${contacto.whatsapp}`;
 /** URL de WhatsApp con mensaje en texto plano; se encarga de codificarlo. */
 export function waLink(texto?: string): string {
   return texto ? `${waBase}?text=${encodeURIComponent(texto)}` : waBase;
+}
+
+/**
+ * Enlace de WhatsApp con los datos de un formulario ya redactados.
+ * Los formularios del sitio entregan por aquí: el cliente revisa y envía el mensaje.
+ */
+export function waCotizacion(campos: Record<string, string>): string {
+  const lineas = Object.entries(campos)
+    .filter(([, valor]) => valor)
+    .map(([campo, valor]) => `${campo}: ${valor}`);
+  return waLink(['Hola, quiero cotizar con Grupo Crear.', ...lineas].join('\n'));
 }
 
 /** href="tel:" a partir del teléfono canónico. */

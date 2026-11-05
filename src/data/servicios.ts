@@ -176,7 +176,7 @@ export const servicios: Servicio[] = [
       { svg: 'M3 15a4 4 0 0 0 4 4h9a5 5 0 1 0-.1-9.999 5.002 5.002 0 0 0-9.78 2.096A4.001 4.001 0 0 0 3 15z', nombre: 'Templates digitales', desc: 'Plantillas para redes sociales y presentaciones.' },
     ],
     fotos: [],
-    fotoPrincipal: '/alternativa_naranja3d.webp',
+    fotoPrincipal: '/media/alternativa-naranja-3d-1000.webp',
     whatsappText: encodeURIComponent('Hola, estoy interesado en el servicio de Branding e Identidad de Marca.'),
     gradiente: 'linear-gradient(135deg,#1a3b78 0%,#001433 100%)',
     pasos: [
