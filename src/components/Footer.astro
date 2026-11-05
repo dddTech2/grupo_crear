@@ -2,6 +2,7 @@
 import { readFileSync } from 'node:fs';
 import { resolve }       from 'node:path';
 import { contacto, waBase, telLink, mailtoLink } from '../data/contacto';
+import NyoCredit from './NyoCredit.astro';
 
 // Año calculado en build time. El script del cliente lo actualiza en runtime
 // por si el sitio no se rebuilds el 1 de enero.
@@ -204,9 +205,7 @@ const activeLinks = legalLinks.filter((l) => l.active);
         <span>Bogotá · Colombia</span>
       </div>
 
-      <small class="foot-credit" aria-label="Desarrollo web: N and O Software">
-        DISEÑO Y DESARROLLO POR <span class="credit-highlight">N&amp;O SOFTWARE</span>
-      </small>
+      <NyoCredit class="foot-credit" />
     </div>
 
   </div>
@@ -501,18 +500,12 @@ const activeLinks = legalLinks.filter((l) => l.active);
     background: var(--n);
   }
 
+  /* El ancho reservado evita que la animación del logo mueva la fila */
   .foot-credit {
     font-family: 'Sofia Sans Condensed', sans-serif;
-    font-size: 11px;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: rgba(255, 255, 255, 0.25);
-    font-weight: 500;
-  }
-
-  .credit-highlight {
+    letter-spacing: 0.05em;
     color: var(--w60);
-    font-weight: 700;
+    min-width: 13em;
   }
 
   /* ── RESPONSIVE ──────────────────────────────────────────────────────── */

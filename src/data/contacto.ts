@@ -30,7 +30,7 @@ export const contacto: Contacto = {
   whatsapp: '573107901380',
   telefono: '+573107901380',
   telefonoDisplay: '310 790 1380',
-  email: 'info@grupocrear.com',
+  email: 'info@grupocrear.co',
   ciudad: 'Bogotá',
   pais: 'Colombia',
   paisCodigo: 'CO',

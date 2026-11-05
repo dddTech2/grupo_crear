@@ -92,7 +92,7 @@ Hallazgos de PSI que siguen vigentes en el código local o que la auditoría no 
 
 Usa una sola ronda de preguntas para estos datos. No inventes valores ni dejes marcadores de posición
 nuevos:
-- **C1:** WhatsApp y teléfono ya son reales (+57 310 790 1380). Faltan confirmar el email (`info@grupocrear.com`, mientras el dominio es `.co`) y las URL reales de las redes sociales (M2).
+- **C1:** WhatsApp y teléfono ya son reales (+57 310 790 1380) y el email es `info@grupocrear.co` (el dominio `.com` no es de Grupo Crear). Faltan las URL reales de las redes sociales (M2).
   Si no existe alguna red, se quita.
 - **C3:** el proveedor para entregar los leads del formulario, y a qué correo deben llegar. Las opciones son Resend, SendGrid o SMTP; Netlify
   Forms ya no aplica. La API key va en `.env` en local y en un secreto de GitHub Actions. Añádela a la

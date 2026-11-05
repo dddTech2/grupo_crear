@@ -29,6 +29,10 @@ for (const dir of ['_astro', 'assets']) {
   }
 }
 
+// Crédito N&O del footer: nombre fijo, así que no puede ser immutable.
+const credit = readFileSync(new URL('./dist/client/nyo-credit.js', import.meta.url));
+assets.set('/nyo-credit.js', { type: TYPES.js, raw: credit, br: brotliCompressSync(credit), gzip: gzipSync(credit, { level: 9 }), cache: MEDIA_CACHE });
+
 const server = http.createServer((req, res) => {
   const path = (req.url ?? '/').split('?')[0];
   const asset = (req.method === 'GET' || req.method === 'HEAD') && assets.get(path);
@@ -40,7 +44,7 @@ const server = http.createServer((req, res) => {
     res.writeHead(200, {
       'Content-Type': asset.type,
       'Content-Length': body.length,
-      'Cache-Control': IMMUTABLE,
+      'Cache-Control': asset.cache ?? IMMUTABLE,
       Vary: 'Accept-Encoding',
       ...(encoding && { 'Content-Encoding': encoding }),
     });

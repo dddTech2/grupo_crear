@@ -1,0 +1,28 @@
+---
+/**
+ * Componente Astro para <nyo-credit>.
+ * Copia dist/nyo-credit.js a /public/nyo-credit.js y úsalo en el footer:
+ *   <NyoCredit />  ·  <NyoCredit variant="brand" />
+ */
+interface Props {
+  variant?: 'mono' | 'brand';
+  label?: string;
+  href?: string;
+  static?: boolean;
+  class?: string;
+}
+const {
+  variant = 'mono',
+  label = 'Diseño y desarrollo',
+  href = 'https://nyoholding.com',
+  static: isStatic = false,
+  class: className
+} = Astro.props;
+---
+<nyo-credit variant={variant} static={isStatic ? '' : undefined} class={className}>
+  <a href={href} rel="nofollow">{label}<span class="nyo-credit__sr"> N&amp;O Holding</span></a>
+</nyo-credit>
+<script is:inline src="/nyo-credit.js" defer></script>
+<style is:global>
+  .nyo-credit__sr{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+</style>
