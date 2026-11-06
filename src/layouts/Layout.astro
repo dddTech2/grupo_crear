@@ -51,6 +51,8 @@ const {
   <script is:inline>
     window.__sceneReady = false;
     window.__domReady = false;
+    // La portada lo resuelve al montar el scroll: sus pins añaden alto a la página
+    window.__scrollSystemReady = new Promise((resolve) => { window.__resolveScrollSystem = resolve; });
     
     // Temporizador de respaldo para evitar bloqueos
     window.__bootTimeout = setTimeout(() => {
@@ -414,7 +416,7 @@ const {
     @media(max-width:768px){
       .menu{display:none}
       .burger{display:flex}
-      .menu.open{display:flex;flex-direction:column;align-items:flex-start;position:fixed;inset:64px 0 auto 0;background:rgba(0,16,42,.97);backdrop-filter:blur(20px);padding:28px clamp(20px,5vw,64px);gap:20px;border-bottom:1px solid var(--w06)}
+      .menu.open{display:flex;flex-direction:column;align-items:flex-start;position:absolute;inset:100% 0 auto 0;background:rgba(0,16,42,.97);backdrop-filter:blur(20px);padding:28px clamp(20px,5vw,64px);gap:20px;border-bottom:1px solid var(--w06)}
       .menu.open a{font-size:20px}
       .hero-out{display:none}
       .srow{grid-template-columns:42px 1fr}
@@ -503,18 +505,34 @@ const {
     // Expose to window so any component can call window.__lenis.scrollTo(target)
     (window as any).__lenis = lenis;
 
-    // Intercept all in-page anchor links and route them through Lenis
-    // so anchor navigation is smooth and doesn't conflict with Lenis's scroll
-    document.querySelectorAll<HTMLAnchorElement>('a[href^="#"]').forEach((anchor) => {
-      anchor.addEventListener('click', (e) => {
-        const id = anchor.getAttribute('href');
-        if (!id || id === '#') return;
-        const target = document.querySelector(id);
-        if (!target) return;
-        e.preventDefault();
-        lenis.scrollTo(target as HTMLElement, { offset: -80, duration: 1.2 });
-      });
+    // Enlaces a secciones: por Lenis, y midiendo solo cuando el scroll de la portada está montado.
+    // Sus pins añaden alto a la página, así que medir antes deja al usuario en otra sección.
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const scrollToSection = async (hash: string, immediate = reducedMotion) => {
+      const target = document.getElementById(decodeURIComponent(hash.slice(1)));
+      if (!target) return;
+      if (document.getElementById('hero-visual')) {
+        (window as any).__startScrollSystem?.();
+        await (window as any).__scrollSystemReady;
+      }
+      lenis.resize(); // el alto cambió al montar los pins y scrollTo limita el destino a su medida anterior
+      lenis.scrollTo(target, { immediate, force: true });
+    };
+
+    document.addEventListener('click', (e) => {
+      if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+      const anchor = (e.target as Element).closest<HTMLAnchorElement>('a[href*="#"]');
+      if (!anchor || anchor.target === '_blank') return;
+      const url = new URL(anchor.href);
+      if (url.origin !== location.origin || url.pathname !== location.pathname) return;
+      e.preventDefault();
+      if (url.hash.length < 2) return; // href="#": enlace aún sin destino, no salta arriba
+      history.pushState(null, '', url.hash);
+      scrollToSection(url.hash);
     });
+
+    // Llegada desde otra página con /#seccion
+    if (location.hash.length > 1) scrollToSection(location.hash, true);
 
     // Scroll reveal: añade clase .on a cada elemento .r cuando entra en el viewport.
     // CSS maneja la transición opacity+translateY — no se necesita GSAP aquí.

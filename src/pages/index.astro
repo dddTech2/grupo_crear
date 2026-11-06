@@ -628,11 +628,15 @@ import { contacto, waBase, telLink, mailtoLink } from '../data/contacto';
     // ── Sistema de scroll ───────────────────────────────────────────────────
     // Se monta al terminar la entrada, o antes si el usuario ya quiere moverse.
     // En móvil espera más: quien solo mira la portada no paga este trabajo.
+    let scrollSystemStarted = false;
     const startScrollSystem = () => {
+      if (scrollSystemStarted) return;
+      scrollSystemStarted = true;
       introTl.progress(1);
-      initScrollSystem();
+      initScrollSystem().finally(() => (window as any).__resolveScrollSystem?.());
     };
-    if (window.scrollY > 0) startScrollSystem();
+    (window as any).__startScrollSystem = startScrollSystem;
+    if (window.scrollY > 0 || location.hash.length > 1) startScrollSystem();
     else onFirstEngagement(startScrollSystem, lightDevice ? 5000 : 2200);
 
     async function initScrollSystem() {

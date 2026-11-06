@@ -81,29 +81,17 @@ import LogoDisplace from './LogoDisplace.astro';
   }, { passive: true });
 
   if (burger && menu) {
-    function openMenu() {
-      menu.classList.remove('hidden');
-      menu.classList.add('flex', 'flex-col', 'absolute', 'top-[64px]', 'left-0', 'right-0',
-        'bg-[#00102a]/97', 'backdrop-blur-[20px]', 'p-7', 'border-b', 'border-white/6');
-      // Comunica estado abierto a lectores de pantalla
-      burger.setAttribute('aria-expanded', 'true');
-    }
+    // aria-expanded comunica el estado a lectores de pantalla. La clase solo actúa en móvil:
+    // en escritorio el menú está siempre visible y un clic no debe ocultarlo.
+    const setMenuOpen = (open: boolean) => {
+      menu.classList.toggle('open', open);
+      burger.setAttribute('aria-expanded', String(open));
+    };
 
-    function closeMenu() {
-      menu.classList.add('hidden');
-      menu.classList.remove('flex', 'flex-col', 'absolute', 'top-[64px]', 'left-0', 'right-0',
-        'bg-[#00102a]/97', 'backdrop-blur-[20px]', 'p-7', 'border-b', 'border-white/6');
-      // Comunica estado cerrado a lectores de pantalla
-      burger.setAttribute('aria-expanded', 'false');
-    }
-
-    burger.addEventListener('click', () => {
-      const isOpen = burger.getAttribute('aria-expanded') === 'true';
-      isOpen ? closeMenu() : openMenu();
-    });
+    burger.addEventListener('click', () => setMenuOpen(burger.getAttribute('aria-expanded') !== 'true'));
 
     menu.querySelectorAll('a').forEach((a) => {
-      a.addEventListener('click', closeMenu);
+      a.addEventListener('click', () => setMenuOpen(false));
     });
   }
 </script>
